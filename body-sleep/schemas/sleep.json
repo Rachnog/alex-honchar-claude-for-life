@@ -14,10 +14,10 @@
     "lowest_hr": { "type": "integer" },
     "avg_hr": { "type": "integer" },
     "respiratory_rate": { "type": "number" },
-    "body_temperature_delta": { "type": "number", "description": "C from baseline" },
-    "bedtime": { "type": "string", "description": "HH:MM 24h" },
+    "body_temperature_delta": { "type": "number" },
+    "bedtime": { "type": "string" },
     "wake_time": { "type": "string" },
-    "latency": { "type": "integer", "description": "minutes to fall asleep" },
+    "latency": { "type": "integer", "description": "minutes" },
     "restfulness": { "type": "string", "enum": ["restful", "moderate", "restless"] }
   }
 }
