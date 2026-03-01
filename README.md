@@ -2,7 +2,7 @@
 
 Personal plugin marketplace for a personal-life AI agent system focused on Claude Code workflows.
 
-This repository currently packages health-focused skills that combine wearable data from multiple MCP servers and apply consistent analysis logic (sleep, recovery, composition, and cross-domain overview).
+This repository currently packages health-focused skills that combine wearable and nutrition data from multiple MCP servers and apply consistent analysis logic (sleep, recovery, composition, diet, and cross-domain overview).
 
 ## Why This Exists
 
@@ -13,8 +13,8 @@ This repository currently packages health-focused skills that combine wearable d
 
 ## Current Version
 
-- Marketplace: `0.2.0`
-- Plugins: `4` (`0.1.0` each)
+- Marketplace: `0.3.0`
+- Plugins: `5` (`0.1.0` each)
 
 Source of truth: `marketplace.json`
 
@@ -47,13 +47,23 @@ Source of truth: `marketplace.json`
   - "Am I recomposing or just losing weight?"
   - "Show 30-day composition trend"
 
-### 4) `body-overview`
-- Focus: Holistic cross-domain analysis (sleep + recovery + composition)
-- MCP dependencies: `oura-mcp`, `garmin-mcp`, `withings-mcp`
+### 4) `body-diet`
+- Focus: Nutrition adherence analysis from Yazio (calories, macros, hydration, logging consistency)
+- MCP dependencies: `yazio-mcp`
+- Schema: `body-diet/schemas/diet.json`
+- Typical prompts:
+  - "How did I eat today?"
+  - "Show my macro adherence for this week"
+  - "Am I under-fueling relative to goals?"
+
+### 5) `body-overview`
+- Focus: Holistic cross-domain analysis (sleep + recovery + composition + diet)
+- MCP dependencies: `oura-mcp`, `garmin-mcp`, `withings-mcp`, `yazio-mcp`
 - Schema references:
   - `body-sleep/schemas/sleep.json`
   - `body-recovery/schemas/recovery.json`
   - `body-composition/schemas/body-composition.json`
+  - `body-diet/schemas/diet.json`
 - Typical prompts:
   - "Full body report"
   - "Overall health weekly summary"
@@ -91,6 +101,10 @@ This makes each plugin easier to maintain, test, and evolve independently.
 │   ├── SKILL.md
 │   └── schemas/
 │       └── body-composition.json
+├── body-diet/
+│   ├── SKILL.md
+│   └── schemas/
+│       └── diet.json
 └── body-overview/
     ├── SKILL.md
     └── schemas/
@@ -105,6 +119,7 @@ Expected MCP integrations:
 - `oura-mcp`
 - `garmin-mcp`
 - `withings-mcp`
+- `yazio-mcp`
 
 Before using a plugin, make sure required MCP servers are enabled and reachable in your Claude Code environment.
 
@@ -114,7 +129,7 @@ Before using a plugin, make sure required MCP servers are enabled and reachable 
 - Skill prompts are practical and specialized around real use-cases.
 - Cross-plugin composition is intentional:
   - `body-recovery` references sleep impact logic.
-  - `body-overview` unifies all three domains.
+  - `body-overview` unifies four domains, including nutrition.
 - `body-overview/schemas/` currently has no dedicated schema file (only `.gitkeep`), which is acceptable because it references sibling schemas, but adding an explicit overview schema would make downstream validation easier.
 
 ## Add a New Plugin
