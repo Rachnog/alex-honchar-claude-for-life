@@ -4,8 +4,8 @@
     "name": "Oleksandr Honchar"
   },
   "metadata": {
-    "description": "Personal body plugin for Claude Code with multiple internal skills",
-    "version": "2.0.0"
+    "description": "Personal multi-area plugin marketplace for Claude Code, currently shipping body domain capabilities",
+    "version": "2.1.0"
   },
   "plugins": [
     {

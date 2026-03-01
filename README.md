@@ -1,25 +1,34 @@
-# Alex Life Marketplace (Single `body` Plugin)
+# Alex Life Marketplace
 
-This repository provides one installable Claude plugin named `body`.
-Inside this single plugin are multiple specialized skills for body-domain analysis.
+Personal Claude plugin marketplace for life-area automation.
 
-## Plugin Model
+Current implementation includes one plugin (`body`), and the repository is designed
+to scale to additional life-area plugins over time (for example work, finance,
+relationships, learning) without restructuring.
 
-- Marketplace manifest: `.claude-plugin/marketplace.json`
-- Single plugin package: `plugins/body/`
-- Plugin manifest: `plugins/body/.claude-plugin/plugin.json`
-- Multiple skills inside one plugin: `plugins/body/skills/**/SKILL.md`
-- Shared schemas: `plugins/body/schemas/*.json`
+## Marketplace Model
 
-## Internal Skills in `body`
+- Root marketplace manifest: `.claude-plugin/marketplace.json`
+- Plugin packages live under `plugins/<area>/`
+- Each plugin owns:
+  - `.claude-plugin/plugin.json`
+  - `skills/**/SKILL.md`
+  - `schemas/*.json` (optional but recommended)
 
-1. `body-sleep`
-2. `body-recovery`
-3. `body-composition`
-4. `body-diet`
-5. `body-overview`
-6. `body-exercise`
-7. `body-medical-checkups`
+## Current Plugins
+
+- `body` (implemented now)
+
+## Future Plugin Model
+
+When you add more life areas, each should be an independent plugin package:
+
+- `plugins/work/`
+- `plugins/finance/`
+- `plugins/relationships/`
+- `plugins/learning/`
+
+No new plugin is created automatically; this README defines the convention only.
 
 ## Current Structure
 
@@ -47,52 +56,28 @@ Inside this single plugin are multiple specialized skills for body-domain analys
             └── medical-checkups.json
 ```
 
-## Obsidian Local Agent Setup (Separate Vault)
+## Obsidian Local Setup (Safe Guidance)
 
-### Step 0: Clean reset legacy `.claude` state
+This repository does not ship private vault prompt templates anymore.
+Keep your vault-specific `CLAUDE.md` files private in your Obsidian vault and do
+not commit them here.
 
-Run in your vault root (replace `<VAULT_PATH>`):
+Recommended reset flow for legacy setups:
 
 ```bash
 cd "<VAULT_PATH>"
-
-# Backup old local agent state
 cp -R .claude ".claude.backup.$(date +%Y%m%d-%H%M%S)" 2>/dev/null || true
-
-# Remove old state to avoid legacy skill discovery conflicts
 rm -rf .claude
-
-# Optional baseline folder (tools may recreate this automatically)
 mkdir -p .claude
 ```
 
-### Step 1: Add marketplace
-
-In Claude plugin UI:
-1. Open `Plugins` -> `Marketplaces`
-2. Add this repository as a marketplace
+Then in Claude plugin UI:
+1. `Plugins -> Marketplaces`
+2. Add this repository as marketplace
 3. Open `Discover`
+4. Install required plugin(s) (currently `body`)
 
-### Step 2: Install single plugin
-
-Install only:
-- `body`
-
-### Step 3: Apply vault prompts
-
-Copy full templates from:
-- `templates/obsidian/CLAUDE.md`
-- `templates/obsidian/300 Areas/Body/CLAUDE.md`
-
-### Step 4: Verify MCP connectivity
-
-Before analysis, confirm:
-- `oura`
-- `garmin`
-- `withings`
-- `yazio`
-
-## Internal Skill Routing Matrix
+## Internal Skill Routing Matrix (`body`)
 
 | Internal skill | MCP servers | Typical trigger classes | Behavior |
 |---|---|---|---|
@@ -107,19 +92,27 @@ Before analysis, confirm:
 ## Daily Operator Checklist
 
 1. Confirm legacy `.claude/skills` clone mode is absent.
-2. Confirm `body` plugin is installed and enabled.
-3. Confirm MCP connectors are online.
-4. Route question to proper internal skill (or `body-overview` for cross-domain).
+2. Confirm required marketplace plugin(s) are installed and enabled.
+3. Confirm MCP connectors are online for the question scope.
+4. Route question to correct internal skill (or overview skill for cross-domain).
 5. If a source is missing, continue with lower confidence and explicit caveats.
-6. Cite relevant files from `400 Resources/` when used.
+6. Cite relevant files from your local `400 Resources/` when used.
 
-## Vault Prompt Templates
+## Add a New Life-Area Plugin
 
-- `templates/obsidian/CLAUDE.md`
-- `templates/obsidian/300 Areas/Body/CLAUDE.md`
+1. Create `plugins/<area>/`.
+2. Add `plugins/<area>/.claude-plugin/plugin.json`.
+3. Add at least one skill file in `plugins/<area>/skills/<area>-<domain>/SKILL.md`.
+4. Add schemas under `plugins/<area>/schemas/` as needed.
+5. Register plugin in `.claude-plugin/marketplace.json` under `plugins[]`.
+6. Validate:
+   - plugin manifest path exists
+   - skill paths resolve
+   - schema references are valid
+   - marketplace entry points to the right `source`
+   - plugin appears in Discover after marketplace refresh
 
-## Why this works
+## Additional Authoring Guide
 
-Discover now shows one installable plugin (`body`) instead of multiple per-area plugins.
-That plugin then exposes multiple specialized internal skills, matching the intended architecture.
+See `docs/plugin-authoring.md` for conventions and pre-publish checks.
 
