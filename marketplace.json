@@ -1,0 +1,11 @@
+{
+  "name": "Alex's AI Plugin Marketplace",
+  "version": "0.1.0",
+  "plugins": {
+    "body": {
+      "version": "0.1.0",
+      "description": "On-demand health analysis from Oura, Garmin, Withings",
+      "mcp_deps": ["oura-mcp", "garmin-mcp", "withings-mcp"]
+    }
+  }
+}

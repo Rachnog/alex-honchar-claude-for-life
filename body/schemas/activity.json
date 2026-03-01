@@ -1,0 +1,44 @@
+{
+  "title": "Activity Log",
+  "description": "Garmin + Oura activity data fields",
+  "type": "object",
+  "properties": {
+    "garmin": {
+      "type": "object",
+      "properties": {
+        "steps": { "type": "integer" },
+        "active_calories": { "type": "integer" },
+        "total_calories": { "type": "integer" },
+        "training_load": { "type": "number" },
+        "vo2max": { "type": "number" },
+        "intensity_minutes": { "type": "integer" },
+        "body_battery_start": { "type": "integer" },
+        "body_battery_end": { "type": "integer" },
+        "activities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "duration": { "type": "string" },
+              "distance_km": { "type": "number" },
+              "avg_hr": { "type": "integer" },
+              "max_hr": { "type": "integer" },
+              "calories": { "type": "integer" },
+              "training_effect_aerobic": { "type": "number" },
+              "training_effect_anaerobic": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "oura": {
+      "type": "object",
+      "properties": {
+        "activity_score": { "type": "integer" },
+        "movement_calories": { "type": "integer" },
+        "steps": { "type": "integer" }
+      }
+    }
+  }
+}

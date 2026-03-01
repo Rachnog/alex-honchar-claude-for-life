@@ -1,0 +1,27 @@
+{
+  "title": "Recovery Log",
+  "description": "Combined Oura readiness + Garmin training assessment",
+  "type": "object",
+  "properties": {
+    "oura_readiness_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "readiness_contributors": {
+      "type": "object",
+      "properties": {
+        "hrv_balance": { "type": "string" },
+        "body_temperature": { "type": "string" },
+        "recovery_index": { "type": "string" },
+        "resting_heart_rate": { "type": "string" },
+        "previous_night": { "type": "string" },
+        "sleep_balance": { "type": "string" }
+      }
+    },
+    "garmin_training_status": { "type": "string" },
+    "garmin_training_load_7d": { "type": "number" },
+    "garmin_recovery_time_hrs": { "type": "integer" },
+    "recommendation": {
+      "type": "string",
+      "enum": ["high-intensity-ok", "moderate-ok", "light-only", "rest-day"]
+    },
+    "rationale": { "type": "string" }
+  }
+}

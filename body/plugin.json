@@ -1,0 +1,6 @@
+{
+  "name": "body",
+  "version": "0.1.0",
+  "description": "On-demand health analysis. No vault output.",
+  "mcp_servers": ["oura-mcp", "garmin-mcp", "withings-mcp"]
+}
