@@ -4,43 +4,15 @@
     "name": "Oleksandr Honchar"
   },
   "metadata": {
-    "description": "Personal life-area plugins for Claude Code (sleep, recovery, composition, diet, and overview)",
-    "version": "1.0.0"
+    "description": "Personal body plugin for Claude Code with multiple internal skills",
+    "version": "2.0.0"
   },
   "plugins": [
     {
-      "name": "body-sleep",
-      "description": "Sleep analysis plugin using Oura data",
-      "version": "0.1.0",
-      "source": "./plugins/body-sleep",
-      "strict": true
-    },
-    {
-      "name": "body-recovery",
-      "description": "Recovery and readiness analysis plugin using Oura + Garmin",
-      "version": "0.1.0",
-      "source": "./plugins/body-recovery",
-      "strict": true
-    },
-    {
-      "name": "body-composition",
-      "description": "Body composition trends plugin using Withings + Garmin context",
-      "version": "0.1.0",
-      "source": "./plugins/body-composition",
-      "strict": true
-    },
-    {
-      "name": "body-diet",
-      "description": "Diet and nutrition adherence plugin using Yazio",
-      "version": "0.1.0",
-      "source": "./plugins/body-diet",
-      "strict": true
-    },
-    {
-      "name": "body-overview",
-      "description": "Cross-domain health overview plugin combining sleep, recovery, composition, and diet",
-      "version": "0.1.0",
-      "source": "./plugins/body-overview",
+      "name": "body",
+      "description": "Unified body plugin with skills for sleep, recovery, composition, diet, overview, exercise, and medical checkups",
+      "version": "1.0.0",
+      "source": "./plugins/body",
       "strict": true
     }
   ]

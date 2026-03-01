@@ -1,9 +1,0 @@
-{
-  "name": "body-recovery",
-  "description": "Assess recovery and training readiness from Oura and Garmin",
-  "version": "0.1.0",
-  "author": {
-    "name": "Oleksandr Honchar"
-  },
-  "keywords": ["health", "recovery", "readiness", "training", "oura", "garmin"]
-}

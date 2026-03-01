@@ -1,9 +1,0 @@
-{
-  "name": "body-overview",
-  "description": "Holistic cross-domain body analysis across sleep, recovery, composition, and diet",
-  "version": "0.1.0",
-  "author": {
-    "name": "Oleksandr Honchar"
-  },
-  "keywords": ["health", "overview", "sleep", "recovery", "composition", "diet"]
-}

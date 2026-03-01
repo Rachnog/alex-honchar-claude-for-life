@@ -1,0 +1,26 @@
+{
+  "title": "Medical Checkups Log",
+  "description": "Medical checkup cadence and lipid target tracking fields",
+  "type": "object",
+  "properties": {
+    "last_checkup_date": { "type": "string", "description": "YYYY-MM-DD" },
+    "days_since_last_checkup": { "type": "integer" },
+    "checkup_frequency_target_days": { "type": "integer" },
+    "ldl_value": { "type": "number" },
+    "hdl_value": { "type": "number" },
+    "ldl_target_met": { "type": "boolean" },
+    "hdl_target_met": { "type": "boolean" },
+    "document_sources": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "followup_priority": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    }
+  }
+}

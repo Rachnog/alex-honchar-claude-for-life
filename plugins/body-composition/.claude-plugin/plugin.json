@@ -1,9 +1,0 @@
-{
-  "name": "body-composition",
-  "description": "Analyze body composition trends from Withings with Garmin context",
-  "version": "0.1.0",
-  "author": {
-    "name": "Oleksandr Honchar"
-  },
-  "keywords": ["health", "body-composition", "withings", "garmin", "recomposition"]
-}

@@ -1,0 +1,18 @@
+{
+  "name": "body",
+  "description": "Unified body analytics plugin with multi-skill routing across sleep, recovery, composition, diet, exercise, medical checkups, and overview",
+  "version": "1.0.0",
+  "author": {
+    "name": "Oleksandr Honchar"
+  },
+  "keywords": [
+    "body",
+    "health",
+    "sleep",
+    "recovery",
+    "composition",
+    "diet",
+    "exercise",
+    "medical-checkups"
+  ]
+}
