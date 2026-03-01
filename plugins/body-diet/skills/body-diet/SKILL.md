@@ -50,4 +50,4 @@ Quant analyst reviewing a dashboard. Numbers first, brief context, no fluff.
 
 ## Schema
 
-Reference schemas/diet.json for field definitions.
+Reference ../../schemas/diet.json for field definitions.

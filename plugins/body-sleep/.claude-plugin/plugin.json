@@ -1,0 +1,9 @@
+{
+  "name": "body-sleep",
+  "description": "Analyze Oura sleep signals and trends",
+  "version": "0.1.0",
+  "author": {
+    "name": "Oleksandr Honchar"
+  },
+  "keywords": ["health", "sleep", "oura", "hrv"]
+}

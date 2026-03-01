@@ -26,7 +26,7 @@ Pull from all four MCPs and cross-correlate:
 
 **Recovery vs training:**
 - Is training load aligned with recovery capacity?
--  days happening when readiness is low?
+- Are hard training days happening when readiness is low?
 
 **Sleep vs training:**
 - How is training intensity affecting HRV and deep sleep trends?
@@ -69,8 +69,8 @@ Quant analyst reviewing a dashboard. Numbers first, brief context, no fluff.
 
 ## Schemas
 
-Reference schemas from sibling skill folders for field definitions:
-- body-sleep/schemas/sleep.json
-- body-recovery/schemas/recovery.json
-- body-composition/schemas/body-composition.json
-- body-diet/schemas/diet.json
+Reference plugin-local schemas for field definitions:
+- ../../schemas/sleep.json
+- ../../schemas/recovery.json
+- ../../schemas/body-composition.json
+- ../../schemas/diet.json

@@ -1,162 +1,90 @@
-# Alex's AI Plugin Marketplace (Claude Code)
+# Alex Life Marketplace (Claude Plugins)
 
-Personal plugin marketplace for a personal-life AI agent system focused on Claude Code workflows.
+Personal Claude plugin marketplace for life areas: sleep, recovery, body composition, diet, and holistic overview.
 
-This repository currently packages health-focused skills that combine wearable and nutrition data from multiple MCP servers and apply consistent analysis logic (sleep, recovery, composition, diet, and cross-domain overview).
-
-## Why This Exists
-
-- Keep personal AI capabilities modular instead of writing one large prompt.
-- Reuse structured skills across sessions in Claude Code.
-- Define explicit MCP dependencies per plugin.
-- Standardize output quality with consistent tone, analysis steps, and schema references.
-
-## Current Version
-
-- Marketplace: `0.3.0`
-- Plugins: `5` (`0.1.0` each)
-
-Source of truth: `marketplace.json`
+This repository is now structured as a proper Claude plugin marketplace:
+- A root marketplace manifest at `.claude-plugin/marketplace.json`
+- One plugin package per life area under `plugins/<plugin-name>`
+- Each plugin package includes its own `.claude-plugin/plugin.json`
+- Skills live inside each plugin package under `skills/**/SKILL.md`
 
 ## Plugin Catalog
 
-### 1) `body-sleep`
-- Focus: Oura sleep analysis (sleep quality, HRV, stages, efficiency)
-- MCP dependencies: `oura-mcp`
-- Schema: `body-sleep/schemas/sleep.json`
-- Typical prompts:
-  - "How did I sleep?"
-  - "Analyze my HRV trend"
-  - "Why is my deep sleep down?"
+1. `body-sleep` — Oura sleep quality and trend analysis
+2. `body-recovery` — Oura + Garmin readiness/training recommendations
+3. `body-composition` — Withings composition trends with Garmin context
+4. `body-diet` — Yazio macro, calorie, hydration, and adherence analysis
+5. `body-overview` — Cross-domain synthesis across all body signals
 
-### 2) `body-recovery`
-- Focus: Training readiness using Oura + Garmin
-- MCP dependencies: `oura-mcp`, `garmin-mcp`
-- Schema: `body-recovery/schemas/recovery.json`
-- Typical prompts:
-  - "Should I train today?"
-  - "Am I recovered?"
-  - "Is my training load too high?"
-
-### 3) `body-composition`
-- Focus: Weight/body composition trends, contextualized by training
-- MCP dependencies: `withings-mcp`, `garmin-mcp`
-- Schema: `body-composition/schemas/body-composition.json`
-- Typical prompts:
-  - "How is my body fat trending?"
-  - "Am I recomposing or just losing weight?"
-  - "Show 30-day composition trend"
-
-### 4) `body-diet`
-- Focus: Nutrition adherence analysis from Yazio (calories, macros, hydration, logging consistency)
-- MCP dependencies: `yazio-mcp`
-- Schema: `body-diet/schemas/diet.json`
-- Typical prompts:
-  - "How did I eat today?"
-  - "Show my macro adherence for this week"
-  - "Am I under-fueling relative to goals?"
-
-### 5) `body-overview`
-- Focus: Holistic cross-domain analysis (sleep + recovery + composition + diet)
-- MCP dependencies: `oura-mcp`, `garmin-mcp`, `withings-mcp`, `yazio-mcp`
-- Schema references:
-  - `body-sleep/schemas/sleep.json`
-  - `body-recovery/schemas/recovery.json`
-  - `body-composition/schemas/body-composition.json`
-  - `body-diet/schemas/diet.json`
-- Typical prompts:
-  - "Full body report"
-  - "Overall health weekly summary"
-  - "How am I doing overall?"
-
-## How Plugins Are Designed
-
-Each plugin uses a consistent internal structure:
-
-- `SKILL.md` defines:
-  - Trigger intents and scope
-  - Required MCP server(s)
-  - Analysis logic and decision rules
-  - Goal alignment behavior
-  - Tone ("numbers first, brief context, no fluff")
-  - Schema linkage
-- `schemas/*.json` provides expected field contracts for outputs/analysis inputs.
-
-This makes each plugin easier to maintain, test, and evolve independently.
-
-## Repository Structure
+## Correct Marketplace Structure
 
 ```text
 .
-├── marketplace.json
-├── body-sleep/
-│   ├── SKILL.md
-│   └── schemas/
-│       └── sleep.json
-├── body-recovery/
-│   ├── SKILL.md
-│   └── schemas/
-│       └── recovery.json
-├── body-composition/
-│   ├── SKILL.md
-│   └── schemas/
-│       └── body-composition.json
-├── body-diet/
-│   ├── SKILL.md
-│   └── schemas/
-│       └── diet.json
-└── body-overview/
-    ├── SKILL.md
-    └── schemas/
-        └── .gitkeep
+├── .claude-plugin/
+│   └── marketplace.json
+└── plugins/
+    ├── body-sleep/
+    │   ├── .claude-plugin/plugin.json
+    │   ├── skills/body-sleep/SKILL.md
+    │   └── schemas/sleep.json
+    ├── body-recovery/
+    │   ├── .claude-plugin/plugin.json
+    │   ├── skills/body-recovery/SKILL.md
+    │   └── schemas/recovery.json
+    ├── body-composition/
+    │   ├── .claude-plugin/plugin.json
+    │   ├── skills/body-composition/SKILL.md
+    │   └── schemas/body-composition.json
+    ├── body-diet/
+    │   ├── .claude-plugin/plugin.json
+    │   ├── skills/body-diet/SKILL.md
+    │   └── schemas/diet.json
+    └── body-overview/
+        ├── .claude-plugin/plugin.json
+        ├── skills/body-overview/SKILL.md
+        └── schemas/
+            ├── sleep.json
+            ├── recovery.json
+            ├── body-composition.json
+            └── diet.json
 ```
 
-## Runtime Dependencies
+## Why This Fixes Discover/Install Behavior
 
-Declared per plugin in `marketplace.json` via `mcp_deps`.
+Previously, the repository acted like a skill folder catalog, so Claude surfaced only individual skills.
 
-Expected MCP integrations:
-- `oura-mcp`
-- `garmin-mcp`
-- `withings-mcp`
-- `yazio-mcp`
+Now each life area is a real plugin package with a plugin manifest, and the root manifest is a real marketplace index. This is what plugin Discover/Install expects.
 
-Before using a plugin, make sure required MCP servers are enabled and reachable in your Claude Code environment.
+## Install Flow
 
-## Notes from the Current Analysis
+1. Add this repository as a marketplace in Claude plugin settings.
+2. Open the marketplace in Discover.
+3. Install plugins by life area (`body-sleep`, `body-recovery`, etc.).
+4. Ensure required MCP servers are connected before using each plugin.
 
-- Marketplace metadata is clear and minimal; plugin definitions are clean.
-- Skill prompts are practical and specialized around real use-cases.
-- Cross-plugin composition is intentional:
-  - `body-recovery` references sleep impact logic.
-  - `body-overview` unifies four domains, including nutrition.
-- `body-overview/schemas/` currently has no dedicated schema file (only `.gitkeep`), which is acceptable because it references sibling schemas, but adding an explicit overview schema would make downstream validation easier.
+## MCP Dependencies by Plugin
 
-## Add a New Plugin
+- `body-sleep`: `oura-mcp`
+- `body-recovery`: `oura-mcp`, `garmin-mcp`
+- `body-composition`: `withings-mcp`, `garmin-mcp`
+- `body-diet`: `yazio-mcp`
+- `body-overview`: `oura-mcp`, `garmin-mcp`, `withings-mcp`, `yazio-mcp`
 
-1. Create a new folder (for example, `body-nutrition/`).
-2. Add `SKILL.md` with:
-   - clear trigger phrases
-   - MCP server dependencies
-   - goals section
-   - analysis rules
-   - tone and output expectations
-3. Add `schemas/<plugin>.json` with expected fields.
-4. Register the plugin in `marketplace.json` under `plugins`:
-   - version
-   - `mcp_deps`
-5. Validate naming consistency between folder, marketplace key, and schema references.
+## Add a New Plugin (Proper Way)
 
-## Near-Term Improvements
+1. Create `plugins/<new-plugin>/`.
+2. Add `.claude-plugin/plugin.json`.
+3. Add at least one skill file at `skills/<skill-name>/SKILL.md`.
+4. Add any schemas needed under `schemas/`.
+5. Register the plugin in `.claude-plugin/marketplace.json` with:
+   - `name`
+   - `description`
+   - `version`
+   - local `source` path
+   - `strict` flag
+6. Validate all referenced paths exist before install.
 
-- Add an explicit `body-overview` schema for holistic outputs.
-- Add lightweight validation scripts to check:
-  - every plugin has `SKILL.md`
-  - every referenced schema path exists
-  - every marketplace plugin folder exists
-- Add example prompt/response fixtures for regression testing quality.
+## Legacy Format Notice
 
-## License
-
-No license file is currently present. Add one if you plan to share this marketplace publicly.
+The old root `marketplace.json` (custom object-based format) has been removed to avoid ambiguity with the Claude marketplace format.
 

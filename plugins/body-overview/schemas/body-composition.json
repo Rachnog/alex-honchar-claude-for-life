@@ -1,0 +1,15 @@
+{
+  "title": "Body Composition Log",
+  "description": "Withings scale measurement fields",
+  "type": "object",
+  "properties": {
+    "weight_kg": { "type": "number" },
+    "body_fat_pct": { "type": "number" },
+    "muscle_mass_kg": { "type": "number" },
+    "bone_mass_kg": { "type": "number" },
+    "water_pct": { "type": "number" },
+    "bmi": { "type": "number" },
+    "fat_trend": { "type": "string", "enum": ["decreasing", "stable", "increasing"] },
+    "muscle_trend": { "type": "string", "enum": ["decreasing", "stable", "increasing"] }
+  }
+}

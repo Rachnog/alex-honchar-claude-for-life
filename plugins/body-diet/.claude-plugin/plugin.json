@@ -1,0 +1,9 @@
+{
+  "name": "body-diet",
+  "description": "Analyze diet and macro adherence from Yazio",
+  "version": "0.1.0",
+  "author": {
+    "name": "Oleksandr Honchar"
+  },
+  "keywords": ["health", "diet", "nutrition", "yazio", "macros"]
+}

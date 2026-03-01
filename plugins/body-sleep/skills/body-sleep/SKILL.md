@@ -24,7 +24,7 @@ Compare current data against sleep goals and flag progress or regression.
 - For trends, pull last 7-14 days and compare
 - Prioritize HRV, deep sleep %, and efficiency over total hours
 - Flag deviations > 1 SD from recent personal baseline
-- Directional language:V trending up 8% over 14 days"
+- Use directional language like "HRV trending up 8% over 14 days"
 - Personal baselines only, never population averages
 - Cross-reference with body-recovery skill when training impact is relevant
 
@@ -46,4 +46,4 @@ Quant analyst reviewing a dashboard. Numbers first, brief context, no fluff.
 
 ## Schema
 
-Reference schemas/sleep.json for field definitions.
+Reference ../../schemas/sleep.json for field definitions.

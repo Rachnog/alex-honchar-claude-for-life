@@ -23,7 +23,7 @@ Compare current measurements against composition goals and flag progress.
 - Pull latest measurement from withings-mcp
 - For trends, pull last 14-30 days
 - Focus on trend lines, not individual measurements — single-day weight fluctuations are noise
-- Contextualize with Garmin training volumeining supporting the recomposition?
+- Contextualize with Garmin training volume: is training supporting recomposition?
 - Track: gaining muscle while losing fat? Weight stable but composition improving?
 - Flag when trends move away from goals
 
@@ -45,4 +45,4 @@ Quant analyst reviewing a dashboard. Numbers first, brief context, no fluff.
 
 ## Schema
 
-Reference schemas/body-composition.json for field definitions.
+Reference ../../schemas/body-composition.json for field definitions.

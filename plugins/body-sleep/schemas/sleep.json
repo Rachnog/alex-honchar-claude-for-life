@@ -1,0 +1,23 @@
+{
+  "title": "Sleep Log",
+  "description": "Oura Ring sleep data fields",
+  "type": "object",
+  "properties": {
+    "sleep_score": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "total_sleep": { "type": "string", "description": "HH:MM" },
+    "deep_sleep": { "type": "string" },
+    "rem_sleep": { "type": "string" },
+    "light_sleep": { "type": "string" },
+    "awake_time": { "type": "string" },
+    "sleep_efficiency": { "type": "number" },
+    "avg_hrv": { "type": "integer", "description": "ms" },
+    "lowest_hr": { "type": "integer" },
+    "avg_hr": { "type": "integer" },
+    "respiratory_rate": { "type": "number" },
+    "body_temperature_delta": { "type": "number" },
+    "bedtime": { "type": "string" },
+    "wake_time": { "type": "string" },
+    "latency": { "type": "integer", "description": "minutes" },
+    "restfulness": { "type": "string", "enum": ["restful", "moderate", "restless"] }
+  }
+}

@@ -24,7 +24,7 @@ Compare against training and recovery goals.
 
 Pull readiness from oura-mcp and training status from garmin-mcp, then:
 
-mmendation logic:**
+**Recommendation logic:**
 - Readiness >= 85 AND recovery_time = 0 -> high intensity ok
 - Readiness 70-84 OR recovery_time <= 12 -> moderate ok
 - Readiness 50-69 OR recovery_time 12-24 -> light only
@@ -51,8 +51,8 @@ Search broadly — file names may not be descriptive. Look at actual content.
 
 ## Tone
 
-Qnt analyst reviewing a dashboard. Numbers first, brief context, no fluff.
+Quant analyst reviewing a dashboard. Numbers first, brief context, no fluff.
 
 ## Schema
 
-Reference schemas/recovery.json for field definitions.
+Reference ../../schemas/recovery.json for field definitions.
