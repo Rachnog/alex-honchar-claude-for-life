@@ -2,9 +2,9 @@
 
 Personal Claude plugin marketplace for life-area automation.
 
-Current implementation includes one plugin (`body`), and the repository is designed
-to scale to additional life-area plugins over time (for example work, finance,
-relationships, learning) without restructuring.
+Current implementation includes two plugins (`body`, `shadow-and-soul`), and the
+repository is designed to scale to additional life-area plugins over time (for
+example work, finance, relationships, learning) without restructuring.
 
 ## Marketplace Model
 
@@ -17,7 +17,8 @@ relationships, learning) without restructuring.
 
 ## Current Plugins
 
-- `body` (implemented now)
+- `body` — physical health (sleep, recovery, composition, diet, exercise, medical checkups)
+- `shadow-and-soul` — inner life analytics (journal sentiment, emotional patterns, subjective-vs-objective correlations)
 
 ## Future Plugin Model
 
@@ -37,23 +38,31 @@ No new plugin is created automatically; this README defines the convention only.
 ├── .claude-plugin/
 │   └── marketplace.json
 └── plugins/
-    └── body/
+    ├── body/
+    │   ├── .claude-plugin/plugin.json
+    │   ├── skills/
+    │   │   ├── body-sleep/SKILL.md
+    │   │   ├── body-recovery/SKILL.md
+    │   │   ├── body-composition/SKILL.md
+    │   │   ├── body-diet/SKILL.md
+    │   │   ├── body-overview/SKILL.md
+    │   │   ├── body-exercise/SKILL.md
+    │   │   └── body-medical-checkups/SKILL.md
+    │   └── schemas/
+    │       ├── sleep.json
+    │       ├── recovery.json
+    │       ├── body-composition.json
+    │       ├── diet.json
+    │       ├── exercise.json
+    │       └── medical-checkups.json
+    └── shadow-and-soul/
         ├── .claude-plugin/plugin.json
         ├── skills/
-        │   ├── body-sleep/SKILL.md
-        │   ├── body-recovery/SKILL.md
-        │   ├── body-composition/SKILL.md
-        │   ├── body-diet/SKILL.md
-        │   ├── body-overview/SKILL.md
-        │   ├── body-exercise/SKILL.md
-        │   └── body-medical-checkups/SKILL.md
+        │   ├── soul-journal/SKILL.md
+        │   └── soul-correlation/SKILL.md
         └── schemas/
-            ├── sleep.json
-            ├── recovery.json
-            ├── body-composition.json
-            ├── diet.json
-            ├── exercise.json
-            └── medical-checkups.json
+            ├── journal-entry.json
+            └── sentiment-correlation.json
 ```
 
 ## Obsidian Local Setup (Safe Guidance)
@@ -75,7 +84,7 @@ Then in Claude plugin UI:
 1. `Plugins -> Marketplaces`
 2. Add this repository as marketplace
 3. Open `Discover`
-4. Install required plugin(s) (currently `body`)
+4. Install required plugin(s) (`body`, `shadow-and-soul`)
 
 ## Internal Skill Routing Matrix (`body`)
 
@@ -88,6 +97,13 @@ Then in Claude plugin UI:
 | `body-overview` | all body MCPs | holistic summary, overall status | Cross-correlates all domains and highlights top priority |
 | `body-exercise` | `garmin-mcp` | training consistency, volume progression, habit execution | Evaluates frequency/load consistency against habits |
 | `body-medical-checkups` | resources-first (+ optional MCP context) | checkup cadence, LDL/HDL tracking, lab follow-ups | Tracks recency and key markers from medical documents |
+
+## Internal Skill Routing Matrix (`shadow-and-soul`)
+
+| Internal skill | MCP servers | Typical trigger classes | Behavior |
+|---|---|---|---|
+| `soul-journal` | `remarkable` | journal, diary, mood log, "transcribe my journal", reflection, sentiment | Extracts handwritten pages as images, transcribes Russian cursive visually, tags sentiment and themes |
+| `soul-correlation` | `remarkable`, `oura-mcp`, `garmin-mcp` | "mood vs sleep", "journal vs device", subjective-objective comparison | Aligns journal sentiment with same-day Oura/Garmin metrics, finds lag patterns and gaps |
 
 ## Daily Operator Checklist
 

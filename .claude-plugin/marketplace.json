@@ -4,8 +4,8 @@
     "name": "Oleksandr Honchar"
   },
   "metadata": {
-    "description": "Personal multi-area plugin marketplace for Claude Code, currently shipping body domain capabilities",
-    "version": "2.1.0"
+    "description": "Personal multi-area plugin marketplace for Claude Code, shipping body and shadow-and-soul domain capabilities",
+    "version": "2.2.0"
   },
   "plugins": [
     {
@@ -13,6 +13,13 @@
       "description": "Unified body plugin with skills for sleep, recovery, composition, diet, overview, exercise, and medical checkups",
       "version": "1.0.0",
       "source": "./plugins/body",
+      "strict": true
+    },
+    {
+      "name": "shadow-and-soul",
+      "description": "Inner life analytics — journal sentiment, emotional patterns, and subjective-vs-objective correlations",
+      "version": "1.0.0",
+      "source": "./plugins/shadow-and-soul",
       "strict": true
     }
   ]
