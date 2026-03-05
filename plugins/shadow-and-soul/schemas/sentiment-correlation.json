@@ -1,0 +1,16 @@
+{
+  "title": "Sentiment-Device Correlation",
+  "description": "Journal sentiment aligned with same-day Oura/Garmin metrics",
+  "type": "object",
+  "properties": {
+    "date": { "type": "string", "format": "date" },
+    "sentiment": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "themes": { "type": "array", "items": { "type": "string" } },
+    "oura_sleep_score": { "type": ["integer", "null"] },
+    "oura_readiness_score": { "type": ["integer", "null"] },
+    "oura_stress_class": { "type": ["string", "null"], "enum": ["normal", "stressful", null] },
+    "oura_stress_high_seconds": { "type": ["integer", "null"] },
+    "oura_activity_score": { "type": ["integer", "null"] },
+    "garmin_activity_type": { "type": ["string", "null"] }
+  }
+}

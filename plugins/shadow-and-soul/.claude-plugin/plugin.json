@@ -1,0 +1,10 @@
+{
+  "name": "shadow-and-soul",
+  "description": "Inner life analytics — journal sentiment, emotional patterns, and subjective-vs-objective correlations. Extensible to meditation, therapy, and mood tracking.",
+  "version": "1.0.0",
+  "author": { "name": "Oleksandr Honchar" },
+  "keywords": [
+    "journal", "mood", "sentiment", "mental-health",
+    "reflection", "shadow", "soul", "diary", "emotions"
+  ]
+}
