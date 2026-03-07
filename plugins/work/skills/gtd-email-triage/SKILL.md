@@ -19,9 +19,11 @@ This skill uses a 3-phase pipeline to read full email bodies without hitting con
 ### Phase 1: Discovery (Main Agent)
 
 1. **List all connected accounts** using `accounts_list`
-2. **Fetch ALL unread email metadata from every account — exhaustively**
-   - Use `gmail_messages_list` with query `is:unread` for each account
-   - **Paginate exhaustively** — if the API returns a next page token, keep fetching until all pages are consumed
+2. **Fetch ALL unread email metadata from every account — exhaustively with pagination**
+   - Use `gmail_messages_list` with query `is:unread` and `max_results: 100` for each account
+   - **WARNING: `max_results: 100` is a PAGE SIZE, not a total.** The API will return at most 100 per call. You MUST check the response for a `nextPageToken` (or `next_page_token`) field. If present, call `gmail_messages_list` again with that token to get the next page. Repeat until no more tokens are returned.
+   - **Do NOT assume 100 emails = all emails.** Round numbers like 100 almost always mean there are more pages.
+   - Keep a running list of all message metadata across all pages before proceeding
    - If an account returns an error or times out, report it and continue with others
 3. **Report totals** to the user (e.g. "Found 47 unread in account-1, 12 in account-2")
 4. **Create temp directory** at `/tmp/claude-email-triage/` (wipe it clean if it exists from a prior run)
