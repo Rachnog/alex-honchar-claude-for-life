@@ -5,23 +5,23 @@ description: Triage and classify emails across ALL connected email accounts usin
 
 # Work — General Management / Getting Things Done
 
-Read and classify inbox emails across **all connected email accounts** (work and personal). This skill is **triage only** — it reads, classifies, and presents a structured summary. It does NOT archive, reply, create events, or take any other action. Actionable items feed into a task manager; non-actionable items feed into a knowledge management system. Separate skills handle those downstream steps.
+Read and classify inbox emails across **all connected email accounts** (work and personal). This skill is **triage only** — it reads, classifies, and presents a structured summary. It does NOT archive, reply, forward, or take any other action. Actionable items feed into a task manager; non-actionable items feed into a knowledge management system. Separate skills handle those downstream steps.
 
 ## MCP Servers
 
 - Google MCP — read/search/list emails across all connected accounts
 - Google Calendar — read calendar to check scheduling context (conflicts, availability)
 
-## Core Workflow — 3-Phase Sub-Agent Pipeline
+## Core Workflow — 3-Phase Pipeline with Metadata-First Triage
 
-This skill uses a 3-phase pipeline to read full email bodies without hitting context limits. Sub-agents each get their own context window, read and classify a batch of emails, and write structured results to temp files that the main agent compiles.
+This skill uses a token-efficient pipeline: most emails are classified from subject+sender metadata alone (no body read). Only ambiguous emails get their full body read by sub-agents. The classification framework is written to a temp file once, not duplicated in every sub-agent prompt.
 
 > **CRITICAL — Email Fetching:**
 > - Make exactly ONE call: **`gmail_messages_list_all_accounts`** with `query: "in:inbox"` and `max_results: 10000`
 > - This single call returns results for every connected account — no need to list accounts first
 > - You MUST pass `max_results: 10000` — the default is only 100 per account, which silently truncates results
 
-### Phase 1: Discovery (Main Agent)
+### Phase 1: Discovery + Metadata Triage (Main Agent)
 
 1. **Fetch ALL inbox emails across every account in a single call:**
    ```
@@ -32,42 +32,97 @@ This skill uses a 3-phase pipeline to read full email bodies without hitting con
 2. **Report totals** to the user (e.g. "Found 47 emails in account-1, 12 in account-2")
    - **Truncation check:** If any account's count is a suspiciously round number (100, 200, 500), warn the user that results may be truncated and ask if they want to retry with a date filter (e.g. `in:inbox after:YYYY/MM/DD`) to get remaining emails
 3. **Create temp directory** at `/tmp/claude-email-triage/` (wipe it clean if it exists from a prior run)
-4. **Write manifest** to `/tmp/claude-email-triage/manifest.json`:
+4. **Load sender cache** — read `plugins/work/skills/gtd-email-triage/sender-cache.json` if it exists. Format:
+   ```json
+   { "noreply@productive.io": {"classification": "NON-ACTIONABLE", "sub": "NON-APPLICABLE"}, ... }
+   ```
+   Emails from cached senders get instant classification (no reasoning needed) — apply the cached classification directly. Still list them in metadata-results.json with reason "sender cache".
+5. **Metadata-only triage** — for non-cached emails, classify obvious ones from subject + sender WITHOUT reading the body:
+
+   Scan every email's subject and sender. Classify immediately if the signal is clear:
+
+   **Classify as NON-ACTIONABLE > SPAM:**
+   - Unsolicited sales, mass marketing, cold outreach from unknown senders
+   - Retail promotions and ads from unknown/unsubscribed sources
+
+   **Classify as NON-ACTIONABLE > NON-APPLICABLE (not SPAM — these are tools the user uses):**
+   - Productivity/time-tracking tool notifications (e.g. Productive, Rize)
+   - Financial service notifications not requiring action (e.g. N26, Wise, PayPal)
+   - Social media notifications (e.g. Pinterest, Discord)
+   - Auto-assignment CRM notifications (e.g. "You have been made the Contact owner")
+   - Receipts, shipping confirmations, order confirmations
+   - Automated system alerts, build notifications, uptime monitors
+
+   **Classify as NON-ACTIONABLE > RELEVANT:**
+   - Known newsletters the user subscribes to
+   - Health/wellness device notifications (e.g. Oura)
+   - Course or learning platform emails (e.g. Neural System Mastery)
+
+   **Leave as AMBIGUOUS (needs body read) — do NOT classify from metadata:**
+   - Emails from actual people (not automated systems)
+   - Unknown senders with non-promotional subjects
+   - Subjects suggesting a request, question, or action needed
+   - Anything where the classification isn't obvious from subject+sender alone
+   - When in doubt, mark as ambiguous — it's better to read the body than to misclassify
+
+6. **Write metadata classification results** to `/tmp/claude-email-triage/metadata-results.json`:
    ```json
    {
-     "accounts": [
+     "classified": [
        {
-         "email": "user@example.com",
-         "message_ids": ["id1", "id2", ...],
-         "subjects": {"id1": "Subject line", ...},
-         "senders": {"id1": "sender@example.com", ...}
+         "account": "user@example.com",
+         "message_id": "id1",
+         "sender": "noreply@productive.io",
+         "subject": "Weekly time report",
+         "classification": "NON-ACTIONABLE",
+         "sub_classification": "NON-APPLICABLE",
+         "reason": "Productive automated notification"
        }
      ],
-     "total_emails": 59,
-     "created_at": "2026-03-07T10:00:00Z"
+     "ambiguous": [
+       {
+         "account": "user@example.com",
+         "message_id": "id5",
+         "sender": "jane@company.com",
+         "subject": "Quick question about the proposal"
+       }
+     ]
    }
    ```
-5. **Decide sub-agent splits:**
-   - 1 sub-agent per account by default
-   - If any account has >50 emails, split that account into sub-agents of ~40 emails each
+7. **Copy the classification framework** to the temp directory:
+   ```
+   cp plugins/work/skills/gtd-email-triage/classification-framework.md /tmp/claude-email-triage/classification-framework.md
+   ```
+   This is read by each sub-agent, avoiding duplication in the main agent's context.
+8. **Report to user:** "Classified X/Y emails from metadata (Z from sender cache). Reading full bodies for W ambiguous emails."
+9. **Decide sub-agent splits** for ambiguous emails only:
+   - Split ambiguous emails into batches of ~60 per sub-agent
+   - Group by account where possible to minimize context switching
    - Record the split plan before launching
 
-### Phase 2: Read + Classify (Sub-Agents, launched in parallel)
+### Phase 2: Read + Classify Ambiguous Emails (Sub-Agents, launched in parallel)
+
+**Skip this phase entirely if there are no ambiguous emails.**
 
 Launch sub-agents using the **Agent tool**. Launch all sub-agents in parallel (multiple Agent tool calls in one response).
 
 Each sub-agent receives a **self-contained prompt** (sub-agents do NOT inherit parent context). The prompt MUST include:
 
 1. **The account email address** to use with `gmail_message_get`
-2. **The exact list of message IDs** to process
-3. **The full classification framework** (copied verbatim from the "Classification Framework" section below — everything between the `---BEGIN CLASSIFICATION CONTEXT---` and `---END CLASSIFICATION CONTEXT---` markers)
-4. **The output file path** (e.g. `/tmp/claude-email-triage/user@example.com-results.json`)
+2. **The exact list of ambiguous message IDs** to process (with their subjects and senders for context)
+3. **Instruction to read the classification framework** from `/tmp/claude-email-triage/classification-framework.md`
+4. **The output file path** (e.g. `/tmp/claude-email-triage/batch-1-results.json`)
 5. **These explicit instructions for the sub-agent:**
 
 ```
-You are an email classification agent. For each message ID below, call `gmail_message_get` to read the full email body, then classify it using the classification framework provided.
+You are an email classification agent. Your job:
 
-IMPORTANT: The framework below gives you a decision tree and reference examples. Use first-principles thinking:
+1. FIRST, read the classification framework from `/tmp/claude-email-triage/classification-framework.md`
+2. For each message ID below, call `gmail_message_get` to read the email body, then classify it
+
+When reading emails, focus on the first ~500 words of the email body for classification. Skip long signatures, legal disclaimers, and quoted reply threads — they rarely affect classification.
+
+IMPORTANT: Use first-principles thinking:
 - Read the actual email content carefully
 - Determine what the email is asking the user to DO (or not do)
 - Consider urgency, sender relationship, and context
@@ -76,10 +131,10 @@ IMPORTANT: The framework below gives you a decision tree and reference examples.
 Write your results to the output file in this JSON format, updating the file every 5-10 emails to avoid data loss:
 
 {
-  "account": "<account email>",
   "total_assigned": <N>,
   "classifications": [
     {
+      "account": "<account email>",
       "message_id": "<id>",
       "sender": "<from address>",
       "subject": "<subject line>",
@@ -98,112 +153,19 @@ If a body fetch fails, classify from the subject/sender metadata you were given 
 Process ALL assigned message IDs. Do not skip any. When done, report: "Processed X/Y emails, results in <path>".
 ```
 
-**Sub-agent prompt template** — the main agent MUST paste the following classification framework into each sub-agent's prompt:
-
----BEGIN CLASSIFICATION CONTEXT---
-
-#### Classification Decision Tree
-
-Every email gets one top-level classification and one sub-classification. Work through the tree top-down:
-
-1. **Does this email require the user to DO something?** (respond, sign, review, decide, schedule, follow up)
-   - YES → ACTIONABLE
-     - Is it time-sensitive (deadline within 48h) or quick (< 5 min)? → URGENT
-     - Otherwise → DEFERRED
-   - NO → NON-ACTIONABLE
-     - Is it relevant to the user's current work, projects, or interests? → RELEVANT
-     - Otherwise → NON-APPLICABLE
-       - Is it junk, mass marketing, or tool noise? → SPAM
-       - Could it be interesting as a new opportunity or trend? → DISCOVERY
-
-```
-Email
-+-- ACTIONABLE -- requires the user to do something
-|   +-- URGENT -- quick (< 5 min), time-sensitive, or has a near deadline
-|   +-- DEFERRED -- needs thoughtful attention, can be scheduled
-|
-+-- NON-ACTIONABLE -- no action required from the user
-    +-- RELEVANT -- applies to current work, projects, interests, or life areas
-    +-- NON-APPLICABLE -- does not match current context
-        +-- SPAM -- junk, unsolicited offers, mass marketing, tool noise
-        +-- DISCOVERY -- potentially interesting new topic, trend, or opportunity
-```
-
-#### First-Principles Classification Guide
-
-Think about each email along these dimensions:
-
-**Is there a required action?**
-- Documents requiring signature → ACTIONABLE
-- Tasks assigned or overdue in any project management / HR / CRM tool → ACTIONABLE
-- Meeting requests needing a response → ACTIONABLE (check calendar for conflicts)
-- Review requests (code, documents, applications) → ACTIONABLE
-- Direct questions from colleagues, clients, or partners → ACTIONABLE
-- Pure notifications, confirmations, receipts → NON-ACTIONABLE
-
-**How urgent is the action?**
-- Explicit deadline within 48 hours → URGENT
-- Can be completed in under 5 minutes → URGENT
-- Needs research, thought, or coordination → DEFERRED
-- First pass by someone else before user's turn → DEFERRED
-
-**Is non-actionable content relevant?**
-- Relates to a project the user is actively working on → RELEVANT
-- From a newsletter or source the user chose to subscribe to → RELEVANT
-- User is CC'd on a topic they care about → RELEVANT
-- Automated noise from tools the user doesn't actively monitor → SPAM
-- Unsolicited sales, marketing, promotions → SPAM
-- Well-targeted outreach or emerging trends outside current focus → DISCOVERY
-
-#### Reference Examples (non-exhaustive — use as pattern guides, not hard rules)
-
-These are known patterns from the user's history. New tools, senders, and patterns will appear — classify them from first principles using the guide above.
-
-ACTIONABLE > URGENT (examples):
-- DocuSign signature requests (flag phishing if sender is unusual)
-- Overdue tasks or direct review requests in HR/recruiting tools (e.g. Ashby)
-- CRM follow-ups specifically assigned to the user (e.g. Hubspot)
-- Client or lead conversations requiring response (e.g. AWS marketplace)
-- Video/async tool comments needing review (e.g. Loom)
-
-ACTIONABLE > DEFERRED (examples):
-- Application reviews where others triage first (e.g. Ashby pipeline)
-- Goal-setting or performance review notifications (e.g. Leapsome)
-- Shared document review requests (Google Docs/Slides/Sheets)
-- Conference or education event invitations needing calendar check
-- Direct emails from interns, potential employees, or collaborators
-- Testing/competition notifications (e.g. Kaggle)
-
-NON-ACTIONABLE > RELEVANT (examples):
-- Newsletters the user actively reads
-- Health/wellness device notifications (e.g. Oura)
-- Course or learning platform emails (e.g. Neural System Mastery)
-- CC'd emails on topics matching user's active projects
-
-NON-ACTIONABLE > SPAM (examples):
-- Automated notifications from productivity/time-tracking tools the user doesn't actively check (e.g. Productive, Rize)
-- Financial service notifications not requiring action (e.g. N26, Wise, PayPal)
-- Social media notifications (e.g. Pinterest, Discord)
-- Auto-assignment notifications from CRM (e.g. "You have been made the Contact owner")
-- Unsolicited service offerings (translation, outsourcing, marketing, lead gen)
-- Retail promotions and ads
-
-NON-ACTIONABLE > DISCOVERY (examples):
-- Service offerings that could be a genuine business match
-- Emerging tech, industry trends, or opportunities outside current focus
-- Cold outreach that is well-targeted and novel
-
----END CLASSIFICATION CONTEXT---
-
 ### Phase 3: Compile + Present (Main Agent)
 
-After all sub-agents complete:
+After all sub-agents complete (or immediately after Phase 1 if no ambiguous emails):
 
-1. **Read all results files** from `/tmp/claude-email-triage/`
-2. **Cross-reference against manifest** — verify every message ID from the manifest appears in results; flag any gaps
-3. **Aggregate and render the final markdown report** using the Output Format below, grouped by account and classification
-4. **Report processing stats** — e.g. "Total: 59/59 processed (100%)" or "Total: 57/59 processed (97%) — 2 errors"
-5. **Clean up** — delete `/tmp/claude-email-triage/` directory and all contents
+1. **Read all results files** from `/tmp/claude-email-triage/`:
+   - `metadata-results.json` — emails classified from metadata in Phase 1
+   - `batch-*-results.json` — emails classified by sub-agents in Phase 2
+2. **Merge results** — combine the `classified` array from metadata-results.json with all sub-agent classification arrays into a single unified list
+3. **Cross-reference against the ambiguous list** — verify every ambiguous message ID appears in sub-agent results; flag any gaps
+4. **Aggregate and render the final markdown report** using the Output Format below, grouped by account and classification
+5. **Report processing stats** — e.g. "Total: 175/175 processed (100%) — 110 from metadata, 65 from body read" or include error counts if any
+6. **Update sender cache** — append any newly classified senders to `plugins/work/skills/gtd-email-triage/sender-cache.json`. Only cache senders that are clearly automated/system senders (not real people). If the user corrects a classification, update the cache entry for that sender.
+7. **Clean up** — delete `/tmp/claude-email-triage/` directory and all contents
 
 ## Generalization Principles
 
@@ -236,7 +198,14 @@ Present results grouped by account and classification:
 - [sender] — [subject] — [which project/interest it relates to]
 
 #### NON-ACTIONABLE — Spam (X emails)
-- [sender] — [subject] — [rule applied]
+Top examples: (up to 5 listed)
+- [sender] — [subject]
+(Y more not shown)
+
+#### NON-ACTIONABLE — Non-Applicable (X emails)
+Top examples: (up to 5 listed)
+- [sender] — [subject]
+(Y more not shown)
 
 #### NON-ACTIONABLE — Discovery (X emails)
 - [sender] — [subject] — [why it might be interesting]
@@ -245,7 +214,7 @@ Present results grouped by account and classification:
 ...
 
 ### Processing Stats
-Total: N/N processed (X%) — Y errors (if any)
+Total: N/N processed (X%) — M from metadata, K from body read — Y errors (if any)
 
 ### New Patterns (X emails)
 - [account] — [sender] — [subject] — [suggested classification, awaiting confirmation]
