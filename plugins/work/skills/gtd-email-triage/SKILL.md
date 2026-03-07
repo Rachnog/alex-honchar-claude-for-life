@@ -1,5 +1,5 @@
 ---
-name: general-management-getting-things-done
+name: gtd-email-triage
 description: Triage and classify emails across ALL connected email accounts using GTD principles. Read-only — classifies into actionable vs non-actionable and presents a structured summary. Trigger on: "process my email", "triage inbox", "check my emails", "email summary", "inbox zero", "GTD", "getting things done", "what needs my attention", "email review", or any question about classifying incoming communications.
 ---
 
