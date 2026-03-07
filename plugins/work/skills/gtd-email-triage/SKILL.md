@@ -5,35 +5,34 @@ description: Triage and classify emails across ALL connected email accounts usin
 
 # Work — General Management / Getting Things Done
 
-Read and classify emails across **all connected email accounts** (work and personal). This skill is **triage only** — it reads, classifies, and presents a structured summary. It does NOT archive, reply, create events, or take any other action. Actionable items feed into a task manager; non-actionable items feed into a knowledge management system. Separate skills handle those downstream steps.
+Read and classify inbox emails across **all connected email accounts** (work and personal). This skill is **triage only** — it reads, classifies, and presents a structured summary. It does NOT archive, reply, create events, or take any other action. Actionable items feed into a task manager; non-actionable items feed into a knowledge management system. Separate skills handle those downstream steps.
 
 ## MCP Servers
 
-- Google MCP — list accounts, read/search/list emails across all connected accounts
+- Google MCP — read/search/list emails across all connected accounts
 - Google Calendar — read calendar to check scheduling context (conflicts, availability)
 
 ## Core Workflow — 3-Phase Sub-Agent Pipeline
 
 This skill uses a 3-phase pipeline to read full email bodies without hitting context limits. Sub-agents each get their own context window, read and classify a batch of emails, and write structured results to temp files that the main agent compiles.
 
-> **CRITICAL — Email Fetching Rules (DO NOT DEVIATE):**
-> - Use **`gmail_messages_list_all_accounts`** — this is a single call that returns all accounts at once
-> - Do **NOT** use `gmail_messages_list` (per-account variant) — it silently caps results
-> - Do **NOT** set `max_results` — omit the parameter entirely so the MCP returns ALL emails with no cap
-> - Violating any of these rules results in truncated email lists (typically capped at 100)
+> **CRITICAL — Email Fetching:**
+> - Make exactly ONE call: **`gmail_messages_list_all_accounts`** with `query: "in:inbox"` and NO other parameters
+> - This single call returns results for every connected account — no need to list accounts first
+> - Do NOT pass `max_results` — omitting it returns ALL emails without any cap
 
 ### Phase 1: Discovery (Main Agent)
 
-1. **List all connected accounts** using `accounts_list`
-2. **Fetch ALL unread email metadata** — call **`gmail_messages_list_all_accounts`** with query `is:unread`
-   - DO NOT use `gmail_messages_list` — that is the wrong tool
-   - DO NOT pass `max_results` — omit it entirely; the MCP will return everything without a cap
-   - This is a single call that covers all connected accounts at once
-   - If an account returns an error or times out, report it and continue with others
-3. **Report totals** to the user (e.g. "Found 47 unread in account-1, 12 in account-2")
-   - **Truncation check:** If any account's count is a suspiciously round number (100, 200, 500), warn the user that results may be truncated and ask if they want to retry with a date filter (e.g. `is:unread after:YYYY/MM/DD`) to get remaining emails
-4. **Create temp directory** at `/tmp/claude-email-triage/` (wipe it clean if it exists from a prior run)
-5. **Write manifest** to `/tmp/claude-email-triage/manifest.json`:
+1. **Fetch ALL inbox emails across every account in a single call:**
+   ```
+   gmail_messages_list_all_accounts(query: "in:inbox")
+   ```
+   This returns all accounts and all their inbox emails (read and unread). No other parameters needed.
+   If an account returns an error or times out, report it and continue with others.
+2. **Report totals** to the user (e.g. "Found 47 emails in account-1, 12 in account-2")
+   - **Truncation check:** If any account's count is a suspiciously round number (100, 200, 500), warn the user that results may be truncated and ask if they want to retry with a date filter (e.g. `in:inbox after:YYYY/MM/DD`) to get remaining emails
+3. **Create temp directory** at `/tmp/claude-email-triage/` (wipe it clean if it exists from a prior run)
+4. **Write manifest** to `/tmp/claude-email-triage/manifest.json`:
    ```json
    {
      "accounts": [
@@ -48,9 +47,9 @@ This skill uses a 3-phase pipeline to read full email bodies without hitting con
      "created_at": "2026-03-07T10:00:00Z"
    }
    ```
-6. **Decide sub-agent splits:**
+5. **Decide sub-agent splits:**
    - 1 sub-agent per account by default
-   - If any account has >50 unread emails, split that account into sub-agents of ~40 emails each
+   - If any account has >50 emails, split that account into sub-agents of ~40 emails each
    - Record the split plan before launching
 
 ### Phase 2: Read + Classify (Sub-Agents, launched in parallel)
