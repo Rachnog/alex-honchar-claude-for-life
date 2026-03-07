@@ -33,6 +33,13 @@ Use this skill when the user asks to:
 
 Support these paths in order.
 
+Decision rule:
+
+- If the user asks about a live or recent period such as `today`, `this week`, `last week`, `this month`, or `last month`, assume they want a fresh export and start with Path A unless they explicitly say to use an existing file.
+- If the user gives a concrete `.streaks` file path or says they already exported the data, use Path B.
+- Do not search the filesystem first for date-scoped requests when the user did not mention an existing export file.
+- Do not silently substitute a recently found export for a fresh-period request. If the data source is not fresh or user-authorized, stop and ask.
+
 ### Path A - Shortcut-first acquisition
 
 Prefer this path when the user wants a fresh export or wants the workflow automated.
@@ -46,6 +53,24 @@ Recommended Shortcut pipeline:
 5. Run Claude Code against the saved export
 
 This is a Shortcut plus shell workflow pattern. It is not a built-in Streaks MCP server.
+
+For fresh-export requests, the first move is to tell the user to run the Shortcut or to help them build the Shortcut. Do not start by searching the disk for `.streaks` files unless the user explicitly asked to reuse a saved export.
+
+Use wording like:
+
+- `To answer that from fresh Streaks data, run your Streaks Shortcut export first and give me the resulting file or payload.`
+- `If you want, I can help you set up the Shortcut plus shell flow so this becomes one command.`
+
+For a request such as `get my streaks performance this week and last month`, the preferred first response is:
+
+- `To answer that from fresh Streaks data, run your Streaks Shortcut export for this week and last month, then pass me the resulting export file or payload. If you want, I can also help you wire the Shortcut so this becomes one command.`
+
+Forbidden first moves for fresh-period requests:
+
+- searching common folders for old `.streaks` files
+- reading the most recent export you happen to find without user approval
+- treating `most recent export on disk` as equivalent to `this week` or `last month`
+- generating the final report before resolving whether the user wants fresh or existing data
 
 Example shell shape:
 
@@ -79,6 +104,15 @@ Required inputs:
 - the reporting window, if not obvious from context
 
 If the user does not specify the review window, infer the most recent full month when that is clearly what they want. Otherwise ask.
+
+Use filesystem search only when:
+
+- the user explicitly says the export already exists somewhere on disk and wants help locating it
+- the user points to a directory and asks you to inspect it
+- the Shortcut-first path already ran and saved the export locally
+
+Do not treat "I want my Streaks performance this week" as permission to search random folders for old exports.
+If you do find an existing export while helping with Path B, state its timestamp and ask whether the user wants to use it before analyzing.
 
 ## Workflow
 
@@ -347,12 +381,63 @@ Pattern:
 Keep the report readable and direct. Do not switch to a heavy schema-style report unless the user asks for that explicitly.
 Adjust the introductory prose to match the actual confidence level of the `st` split and the grouping field. The sample structure is fixed; the certainty of the wording is not.
 
+## Downstream Handoff
+
+When another plugin needs Streaks evidence, keep `mind:streaks-export-analysis` as the source of truth for export decoding.
+Do not make downstream plugins reverse-engineer raw `.streaks` files when a Streaks report or summary can be passed in instead.
+
+After the main markdown report, optionally provide a compact handoff section for other skills under this shape:
+
+```markdown
+## Habit Evidence Summary
+
+- Review window: `[start]` to `[end]`
+- Current tasks analyzed: `[N]`
+- Grouping basis: `[high-confidence grouping or caveated grouping]`
+- Strongest habits: `[habit]`, `[habit]`
+- Weakest habits: `[habit]`, `[habit]`
+- Notable habits:
+  - `[habit]` - `[brief adherence summary]`
+  - `[habit]` - `[brief adherence summary]`
+- Caveats:
+  - `[important ambiguity or confidence note]`
+```
+
+Keep the handoff generic. Downstream plugins should decide which habits matter to their own domain rather than relying on `mind` to assign domain ownership.
+
 ## File Output Rules
 
 If the user asks for a saved report:
 
 - write markdown to the requested path
 - otherwise save next to the export with a descriptive filename such as `2026-02-habits-report.md`
+
+If the user wants the report saved into a `Periodics` structure, create the period subfolder first when needed.
+
+Folder naming rules:
+
+- monthly reports: create or use a month-name folder such as `January`, `February`, `March`
+- weekly reports: create or use a week-number folder such as `Week 10`, `Week 11`
+- the period folder should live inside the correct parent under `Periodics`, for example a monthly parent for month reports and a weekly parent for week reports
+
+Use shell commands shaped like:
+
+```bash
+# Monthly report
+mkdir -p "$PERIODICS_ROOT/Monthly/$MONTH_NAME"
+
+# Weekly report
+mkdir -p "$PERIODICS_ROOT/Weekly/Week $ISO_WEEK"
+```
+
+Then save the report inside that folder.
+
+Examples:
+
+- monthly: `$PERIODICS_ROOT/Monthly/February/2026-02-streaks-report.md`
+- weekly: `$PERIODICS_ROOT/Weekly/Week 10/2026-week-10-streaks-report.md`
+
+Only create the folder if it does not already exist. `mkdir -p` is the preferred command because it is safe when the folder already exists.
 
 If the user only asks for analysis and does not request a file:
 

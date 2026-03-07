@@ -15,6 +15,13 @@ The default top-level entrypoint for normal questions is `body-data-qa`. This sk
 garmin-mcp — pull workout history, training load, training status, steps,
 activity sessions, and related performance signals.
 
+## Supporting Inputs
+
+- `mind:streaks-export-analysis` - optional exercise-adjacent adherence evidence from Streaks
+
+Use Streaks only as supporting evidence for habits Garmin may undercapture or miss entirely, such as warmups, stretching, rehab, walking goals, sauna, or showing up to train without a clean recorded workout.
+Garmin remains the primary source for actual training load and workout execution.
+
 ## Goals
 
 Use the same reasoning order as the workflow skills:
@@ -33,6 +40,9 @@ Use the same reasoning order as the workflow skills:
 - Evaluate session frequency against the weekly habit target.
 - Compare recent load versus the historical baseline to flag over-loading and under-loading.
 - Assess pattern consistency such as missed streaks or irregular session timing.
+- If Garmin evidence is incomplete or the question depends on exercise-adjacent routines, use `mind:streaks-export-analysis` to fill the adherence gap.
+- For live or recent windows such as `this week` or `last month`, prefer a fresh Streaks export unless the user explicitly wants to reuse an existing report.
+- For older or clearly file-based exercise questions, an authorized saved Streaks report is acceptable.
 - Distinguish real progression from isolated hard-session spikes.
 - Correlate the training pattern with sleep and recovery context when relevant.
 - For planning questions, recommend next 7 days intensity mix:
@@ -47,7 +57,7 @@ Present the findings in prose under this shape:
 - `Trend` - how consistency and load changed over the active window
 - `Habit alignment` - whether behavior matches the stated system and weekly targets
 - `Interpretation` - whether the pattern suggests progress, drift, or unsustainable spikes
-- `Caveats` - missing activity capture, ambiguous workout labels, or weak context
+- `Caveats` - missing activity capture, ambiguous workout labels, weak context, or Streaks-vs-Garmin mismatch
 
 ## Escalation Rules
 

@@ -35,23 +35,34 @@ This ordering is mandatory because recommendations must be checked against inten
 - `withings-mcp` - body composition and weight trend
 - `yazio-mcp` - nutrition, hydration, and logging consistency
 
+## Supporting Inputs
+
+- `mind:streaks-export-analysis` - optional habits-adherence evidence from a Streaks export or a recent Streaks report
+
+Use Streaks evidence when the review needs direct proof of routine execution, maintenance habits, or behavior that sensors do not capture well, such as supplements, stretching, journaling, rehab, or wind-down routines.
+Do not treat Streaks as a replacement for biometric sources; it is supporting behavior evidence.
+
 ## Review Workflow
 
 1. Determine the review period and the comparison window.
 2. Read the OS, systems/targets, and area guidance before drawing conclusions.
 3. Pull the relevant windows from each active data source.
-4. Ask each specialist domain to produce its evidence:
+4. If the review is substantially about habits, systems, or routine adherence, use `mind:streaks-export-analysis`.
+   - For live or recent windows such as `this week`, `last week`, `this month`, or `last month`, prefer a fresh Streaks export unless the user explicitly wants to reuse an existing report.
+   - For older or clearly file-based reviews, a recent saved Streaks report is acceptable when the user authorizes it.
+5. Ask each specialist domain to produce its evidence:
    - `body-sleep`
    - `body-recovery`
    - `body-composition`
    - `body-diet`
    - `body-exercise`
    - `body-medical-checkups`
-5. Compare the current period to the prior equivalent period when possible.
-6. Compare domains against each other, not just against their own history.
-7. Cross-check findings against goals, habits, maintenance systems, and stated principles.
-8. Search `400 Resources/` when recommendations need more context.
-9. Produce a structured review with priorities, caveats, and next actions.
+6. Compare the current period to the prior equivalent period when possible.
+7. Compare domains against each other, not just against their own history.
+8. Cross-check findings against goals, habits, maintenance systems, and stated principles.
+9. Use Streaks evidence to strengthen `habits_alignment` and `systems_alignment`, especially when the biometrics alone do not explain execution quality.
+10. Search `400 Resources/` when recommendations need more context.
+11. Produce a structured review with priorities, caveats, and next actions.
 
 ## What To Compare
 
@@ -60,6 +71,7 @@ Every cadence review should look for:
 - period-over-period changes inside each domain
 - cross-domain relationships such as sleep vs training, nutrition vs composition, recovery vs load, or stress vs adherence
 - consistency against maintenance habits and recurring systems
+- direct routine adherence from Streaks when the review depends on execution rather than only on passive sensing
 - goal progress against numerical targets
 - conflicts between what the data says and what the operating system says should matter
 
@@ -94,6 +106,8 @@ If the user only wants a narrow answer, de-escalate to `body-data-qa`.
 - Prefer period windows over isolated daily snapshots.
 - Prefer personal baselines over generic averages.
 - Explicitly mark incomplete connectors, sparse logging, stale measurements, or inferred metrics.
+- Treat Streaks reports as self-tracked execution evidence, not as proof of physiological outcome.
+- If Streaks and biometric sources disagree, report both rather than forcing a false reconciliation.
 - If one domain has poor data quality, reduce confidence in cross-domain conclusions that depend on it.
 - Never fabricate a review section for a domain with no evidence; mark it as unavailable instead.
 

@@ -26,6 +26,18 @@ If one of these layers is missing, continue with explicit caveats instead of blo
 - `withings-mcp` - weight and body composition
 - `yazio-mcp` - calories, macros, hydration, food logging
 
+## Supporting Inputs
+
+- `mind:streaks-export-analysis` - optional habits-adherence evidence when the question is about routine execution, consistency, or behavior drift
+
+Use Streaks selectively. It is most useful for questions like:
+
+- whether a routine was actually executed
+- whether adherence dropped before the biometric trend changed
+- whether a maintenance system was followed consistently
+
+Do not pull Streaks into every body question by default.
+
 ## When To Use
 
 Use `body-data-qa` by default when the user asks things like:
@@ -43,15 +55,18 @@ Do not use this as the primary skill for weekly, monthly, quarterly, or yearly r
 
 1. Identify whether the question is single-domain or cross-domain.
 2. Pull only the minimum data needed to answer the question well.
-3. Use the matching specialist skill for the domain logic:
+3. If the question is materially about adherence, routine execution, or habit consistency, use `mind:streaks-export-analysis`.
+   - For live or recent windows such as `today`, `this week`, `last week`, `this month`, or `last month`, prefer a fresh Streaks export unless the user explicitly wants to reuse an existing report.
+   - For older or clearly file-based questions, an authorized saved Streaks report is acceptable.
+4. Use the matching specialist skill for the domain logic:
    - `body-sleep`
    - `body-recovery`
    - `body-composition`
    - `body-diet`
    - `body-exercise`
    - `body-medical-checkups`
-4. If the question spans multiple domains, synthesize the specialist evidence into one concise answer.
-5. If the question turns into a recurring-review style request, escalate to `body-cadence-review`.
+5. If the question spans multiple domains, synthesize the specialist evidence into one concise answer.
+6. If the question turns into a recurring-review style request, escalate to `body-cadence-review`.
 
 ## Output Contract
 
@@ -72,6 +87,7 @@ Stay in `body-data-qa` when:
 - the user asks one targeted question
 - the comparison window is small and tightly scoped
 - the output can be answered cleanly without a full ritual review
+- any Streaks evidence needed is narrow and directly relevant to the question
 
 Escalate to `body-cadence-review` when:
 
@@ -85,6 +101,7 @@ Escalate to `body-cadence-review` when:
 - Use personal baselines over population norms unless the question is explicitly medical.
 - Prefer trend windows over single-day noise.
 - Mark inferred values and derived streaks as lower confidence than direct MCP fields.
+- Treat Streaks as self-tracked adherence evidence, not as a replacement for sensor data.
 - If a connector is missing, continue with the available evidence and say exactly what is unavailable.
 - If recommendations depend on local documents in `400 Resources/`, cite the file that informed them.
 
