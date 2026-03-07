@@ -17,9 +17,14 @@ Read and classify emails across **all connected email accounts** (work and perso
 When the user asks to process emails:
 
 1. **List all connected accounts** using the Google MCP accounts list
-2. **Fetch recent unread/unprocessed emails from every account**
-3. **Classify each email** into the decision tree below
-4. **Present a summary** grouped by classification, with account labels
+2. **Fetch ALL unread emails from every account — exhaustively**
+   - Use the Gmail list endpoint for each account with query `is:unread` (or `in:inbox is:unread` depending on user preference)
+   - **Do NOT stop at the first page of results.** If the API returns a next page token, keep fetching until all pages are consumed
+   - For each account, continue paginating until there are zero remaining pages
+   - Report the total count fetched per account before classifying (e.g. "Found 47 unread emails in account-1, 12 in account-2")
+   - If an account returns an error or times out, report it and continue with the other accounts
+3. **Classify every single email** into the decision tree below — do not skip, sample, or summarize in bulk
+4. **Present a complete summary** grouped by classification, with account labels
 5. **Stop** — do not execute any actions
 
 ## Classification Decision Tree
