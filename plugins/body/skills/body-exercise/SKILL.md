@@ -36,9 +36,12 @@ Use the same reasoning order as the workflow skills:
 
 ## Analysis
 
-- Pull the current week and the last four weeks from `garmin-mcp`.
+- For direct exercise-only questions, pull the current week and the last four weeks from `garmin-mcp`.
+- When invoked from `body-cadence-review`, use the exact review and comparison windows provided by the caller, such as `this week` vs `last week` or `this month` vs `last month`.
+- Do not let cadence-review comparisons drift into `current week vs recent baseline` unless that rolling view is explicitly labeled as supplemental context.
 - Evaluate session frequency against the weekly habit target.
-- Compare recent load versus the historical baseline to flag over-loading and under-loading.
+- For direct exercise-only questions, compare recent load versus the historical baseline to flag over-loading and under-loading.
+- For cadence reviews, keep the caller-provided comparison window as the primary frame and mention historical baseline only as supplemental context when useful.
 - Assess pattern consistency such as missed streaks or irregular session timing.
 - If Garmin evidence is incomplete or the question depends on exercise-adjacent routines, use `mind:streaks-export-analysis` to fill the adherence gap.
 - For live or recent windows such as `this week` or `last month`, prefer a fresh Streaks export unless the user explicitly wants to reuse an existing report.

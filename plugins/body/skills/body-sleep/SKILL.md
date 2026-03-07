@@ -28,7 +28,9 @@ Use the same reasoning order as the workflow skills:
 Produce sleep evidence that can stand on its own or feed a larger synthesis.
 
 - Pull the requested date or latest available sleep record from `oura-mcp`.
-- For trends, pull a 7-14 day window unless the caller asks for longer.
+- For direct sleep-only trend questions, pull a 7-14 day window unless the caller asks for longer.
+- When invoked from `body-cadence-review`, use the exact review and comparison windows provided by the caller, such as `this week` vs `last week` or `this month` vs `last month`.
+- Do not substitute a rolling 7-14 day baseline for cadence reviews unless it is explicitly labeled as supplemental context.
 - Prioritize HRV, deep sleep percentage, REM balance, efficiency, and lowest heart rate over raw total-hours simplifications.
 - Flag deviations greater than one standard deviation from the recent personal baseline when the data supports it.
 - Use directional language such as "HRV up 8% over 14 days" or "deep sleep down 11% vs prior week".

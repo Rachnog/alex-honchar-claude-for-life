@@ -56,18 +56,22 @@ Recommended Shortcut pipeline:
 
 This is a Shortcut plus shell workflow pattern. It is not a built-in Streaks MCP server.
 
-For fresh-export requests, the first move is to tell the user to run the Shortcut or to help them build the Shortcut. Do not start by searching the disk for `.streaks` files unless the user explicitly asked to reuse a saved export.
+For fresh-export requests, the first move is to try Apple Shortcuts automatically when the `shortcuts` CLI and a matching export shortcut are available. Do not start by searching the disk for `.streaks` files unless the user explicitly asked to reuse a saved export.
+
+If the `shortcuts` CLI is available and there is a matching Streaks export shortcut, try running it automatically before asking the user to do it manually.
+Prefer the shortcut named `Streaks Export` when present.
 
 Use wording like:
 
-- `To answer that from fresh Streaks data, run your Streaks Shortcut export first and give me the resulting file or payload.`
+- `I’m trying your Apple Shortcuts Streaks export automatically first. If it succeeds, I’ll use that output directly.`
+- `If the automatic Shortcut run fails, run your Streaks Shortcut export and give me the resulting file or payload.`
 - `If you want, I can help you set up the Shortcut plus shell flow so this becomes one command.`
 
 For a weekly or monthly body-review flow, this ask is mandatory. Do not let the downstream review finish until the Shortcut-provided Streaks export has been supplied and analyzed.
 
 For a request such as `get my streaks performance this week and last month`, the preferred first response is:
 
-- `To answer that from fresh Streaks data, run your Streaks Shortcut export for this week and last month, then pass me the resulting export file or payload. If you want, I can also help you wire the Shortcut so this becomes one command.`
+- `I’m trying your Apple Shortcuts Streaks export automatically first for this week and last month. If that automatic run fails, I’ll ask you for the resulting file or payload.`
 
 Forbidden first moves for fresh-period requests:
 
@@ -75,6 +79,7 @@ Forbidden first moves for fresh-period requests:
 - reading the most recent export you happen to find without user approval
 - treating `most recent export on disk` as equivalent to `this week` or `last month`
 - generating the final report before resolving whether the user wants fresh or existing data
+- asking the user to run the Shortcut before first attempting `shortcuts run "Streaks Export"` when that automatic path is available
 
 Example shell shape:
 
@@ -85,8 +90,9 @@ EXPORT_DIR="$HOME/Documents/Streaks"
 DATE=$(date +%Y-%m-%d)
 mkdir -p "$EXPORT_DIR"
 
-# $1 should be the Streaks backup payload from Shortcuts
-printf '%s' "$1" > "$EXPORT_DIR/backup-$DATE.streaks"
+# Run the Shortcut first when available and capture its output
+EXPORT_PAYLOAD="$(shortcuts run "Streaks Export")"
+printf '%s' "$EXPORT_PAYLOAD" > "$EXPORT_DIR/backup-$DATE.streaks"
 
 claude -p "Analyze $EXPORT_DIR/backup-$DATE.streaks and write a markdown habits report." \
   --output-format text
@@ -325,11 +331,12 @@ If a low-confidence interpretation changes the headline result, stop and ask ins
 ## Output Contract
 
 Default to the sample-style markdown report unless the user explicitly asks for a different format.
+The same structure can be used for monthly or weekly reviews; only the title, window labels, and metric lines should change with the cadence.
 
 Use this structure:
 
 ```markdown
-# [Month Year] Habits Report
+# [Period Label] Habits Report
 
 Source: `[export filename]`
 
@@ -360,7 +367,7 @@ Repeat the following section once per discovered group:
 
 1. `Task name`
    Daily, 1x target
-   February: `15/28` successful days, `13/28` missed
+   [Period label]: `[metric summary]`
 
 1. `Task name`
    [Cadence label]
@@ -384,6 +391,12 @@ Pattern:
 
 Keep the report readable and direct. Do not switch to a heavy schema-style report unless the user asks for that explicitly.
 Adjust the introductory prose to match the actual confidence level of the `st` split and the grouping field. The sample structure is fixed; the certainty of the wording is not.
+
+Weekly examples:
+
+- title: `Week 10 Habits Report`
+- metric line: `Week 10: 4/5 successful days, 1/5 missed`
+- weekly count target line: `Week 10: 1 successful week, 0 partial weeks, 0 missed weeks`
 
 ## Downstream Handoff
 

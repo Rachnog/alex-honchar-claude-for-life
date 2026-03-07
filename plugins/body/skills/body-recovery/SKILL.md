@@ -39,7 +39,9 @@ Pull readiness from `oura-mcp` and training context from `garmin-mcp`, then prod
 - How yesterday's training affected last night's HRV and deep sleep
 - Pull multiple days if needed to show the pattern
 
-For trend questions, pull 7-14 days of data and compare the current window to the prior window when possible.
+For direct recovery-only trend questions, pull 7-14 days of data and compare the current window to the prior window when possible.
+When invoked from `body-cadence-review`, use the exact review and comparison windows provided by the caller, such as `this week` vs `last week` or `this month` vs `last month`.
+Do not replace cadence-review comparisons with a rolling recent baseline unless that baseline is explicitly called out as supplemental context.
 
 ## Output Contract
 

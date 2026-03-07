@@ -1,18 +1,19 @@
 {
   "title": "Body Cadence Review",
-  "description": "Structured output for weekly, monthly, quarterly, or yearly body reviews",
+  "description": "Structured output for a single weekly, monthly, quarterly, or yearly body review. If multiple cadences are requested together, emit one object per cadence.",
   "type": "object",
   "properties": {
     "review_period": {
       "type": "string",
-      "enum": ["weekly", "monthly", "quarterly", "yearly"]
+      "enum": ["weekly", "monthly", "quarterly", "yearly"],
+      "description": "Cadence of the active review. Weekly/monthly reviews should compare against the immediately prior equivalent calendar period."
     },
     "review_window": {
       "type": "object",
       "properties": {
         "start_date": { "type": "string", "description": "YYYY-MM-DD" },
         "end_date": { "type": "string", "description": "YYYY-MM-DD" },
-        "comparison_label": { "type": "string" }
+        "comparison_label": { "type": "string", "description": "Human label for the active review window, such as 'this week' or 'this month'" }
       },
       "required": ["start_date", "end_date", "comparison_label"]
     },
@@ -23,7 +24,8 @@
         "end_date": { "type": "string", "description": "YYYY-MM-DD" },
         "comparison_type": {
           "type": "string",
-          "enum": ["previous-equivalent-period", "rolling-baseline", "custom", "none"]
+          "enum": ["previous-equivalent-period", "rolling-baseline", "custom", "none"],
+          "description": "For weekly/monthly cadence reviews, use 'previous-equivalent-period' by default. Use rolling-baseline or custom only when explicitly requested."
         }
       },
       "required": ["comparison_type"],
@@ -41,6 +43,8 @@
           }
         }
       ]
+    ,
+      "description": "Concrete comparison window used for the review, such as last week for a weekly review or last month for a monthly review."
     },
     "domains": {
       "type": "object",

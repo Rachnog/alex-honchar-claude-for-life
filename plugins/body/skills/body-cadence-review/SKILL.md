@@ -17,6 +17,21 @@ It is designed for deliberate review rituals rather than one-off questions.
 
 If the user does not specify the cadence, infer it from context or ask.
 
+## Comparison Rules
+
+Cadence reviews use explicit calendar-period comparisons by default.
+
+- weekly review means `this week` vs `last week`
+- monthly review means `this month` vs `last month`
+- quarterly review means the current quarter vs the previous quarter
+- yearly review means the current year vs the previous year
+
+For weekly reviews, use ISO week boundaries.
+For monthly reviews, use calendar-month boundaries.
+
+If the user asks for both a weekly and monthly review together, compute each comparison independently.
+Do not let a weekly comparison drift into "late last month" or another rolling recent baseline.
+
 ## Reasoning Order
 
 Before using MCPs or local resources, follow this order whenever the private vault contains the relevant documents:
@@ -45,14 +60,20 @@ Streaks is not a replacement for biometric sources, but it is a required input f
 ## Review Workflow
 
 1. Determine the review period and the comparison window.
+   - For `weekly`, define the current ISO week and the immediately previous ISO week.
+   - For `monthly`, define the current calendar month and the immediately previous calendar month.
+   - If both are requested, keep both window pairs explicit all the way through the review.
 2. Read the OS, systems/targets, and area guidance before drawing conclusions.
 3. Pull the relevant windows from each active data source.
 4. For weekly and monthly reviews, get Streaks data through Apple Shortcuts before continuing.
-   - If Streaks data is not already provided, ask the user to run the Shortcut export and stop there.
+   - If Streaks data is not already provided, first try to run the Shortcut automatically via the `shortcuts` CLI.
+   - Prefer the shortcut named `Streaks Export` when it exists.
+   - Example command: `shortcuts run "Streaks Export"`
+   - If the automatic Shortcut run fails, the shortcut is missing, or the output is unusable, then ask the user to run the Shortcut manually and stop there.
    - Do not continue with only Oura, Garmin, Withings, and Yazio.
    - Do not silently use an old file on disk.
    - Do not finish the review and mention missing Streaks only in caveats.
-   - Preferred wording: `To complete this weekly/monthly body review, run your Apple Shortcuts Streaks export and pass me the resulting file or payload. I need that before I can finalize the review.`
+   - Preferred fallback wording: `I tried to run your Apple Shortcuts Streaks export automatically, but I still need the resulting file or payload to complete this weekly/monthly body review.`
 5. Use `mind:streaks-export-analysis` to interpret the Streaks export and provide habits-adherence evidence.
 6. Ask each specialist domain to produce its evidence:
    - `body-sleep`
@@ -61,7 +82,10 @@ Streaks is not a replacement for biometric sources, but it is a required input f
    - `body-diet`
    - `body-exercise`
    - `body-medical-checkups`
-7. Compare the current period to the prior equivalent period when possible.
+7. Compare the current period to the prior equivalent calendar period.
+   - Weekly means `this week` vs `last week`.
+   - Monthly means `this month` vs `last month`.
+   - Do not substitute rolling windows unless they are explicitly labeled as supplemental context.
 8. Compare domains against each other, not just against their own history.
 9. Cross-check findings against goals, habits, maintenance systems, and stated principles.
 10. Use Streaks evidence to strengthen `habits_alignment` and `systems_alignment`, especially when the biometrics alone do not explain execution quality.
@@ -78,6 +102,9 @@ Every cadence review should look for:
 - direct routine adherence from Streaks when the review depends on execution rather than only on passive sensing
 - goal progress against numerical targets
 - conflicts between what the data says and what the operating system says should matter
+
+When specialist skills are invoked from `body-cadence-review`, they must use the exact review and comparison windows passed by the caller.
+They may mention rolling-baseline context only as supplemental context, never as the primary comparison.
 
 ## Recommendation Rules
 
@@ -129,6 +156,10 @@ Structure the review around:
 - recommended next actions
 
 The response should be detailed enough to feel like a real review, but still numbers-first and decision-oriented.
+
+When both a weekly and monthly review are requested together, treat them as two separate cadence-review outputs.
+Each output should carry its own review window, comparison window, findings, and save path.
+`../../schemas/cadence-review.json` describes one cadence review at a time, so do not force a combined weekly+monthly response into a single schema object.
 
 ## File Saving
 

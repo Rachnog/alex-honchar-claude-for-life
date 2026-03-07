@@ -27,7 +27,9 @@ Use the same reasoning order as the workflow skills:
 ## Analysis
 
 - Pull the latest measurement from `withings-mcp`.
-- For trends, pull 14-30 days and compare recent movement to the prior equivalent period when useful.
+- For direct composition-only trend questions, pull 14-30 days and compare recent movement to the prior equivalent period when useful.
+- When invoked from `body-cadence-review`, use the exact review and comparison windows provided by the caller, such as `this week` vs `last week` or `this month` vs `last month`.
+- Do not silently convert a cadence review into a rolling 14-30 day comparison unless it is explicitly labeled as supplemental context.
 - Focus on trend lines, not isolated weigh-ins. Single-day weight fluctuations are noise.
 - Contextualize with Garmin training volume when it helps explain recomposition.
 - Track recomposition patterns such as fat decreasing while muscle is stable or rising.

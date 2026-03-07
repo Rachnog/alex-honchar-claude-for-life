@@ -25,7 +25,9 @@ Use the same reasoning order as the workflow skills:
 ## Analysis
 
 - Pull today or the requested date from `yazio-mcp`.
-- For trends, pull the last 7-14 days, or 30 days when the question is broader.
+- For direct diet-only trend questions, pull the last 7-14 days, or 30 days when the question is broader.
+- When invoked from `body-cadence-review`, use the exact review and comparison windows provided by the caller, such as `this week` vs `last week` or `this month` vs `last month`.
+- Do not replace cadence-review comparisons with a rolling recent window unless that rolling context is explicitly labeled as supplemental.
 - Calculate adherence against goals:
   - energy_kcal consumed vs target
   - protein_g, carb_g, fat_g consumed vs targets
