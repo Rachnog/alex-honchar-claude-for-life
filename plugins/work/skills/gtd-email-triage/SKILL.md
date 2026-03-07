@@ -17,17 +17,17 @@ Read and classify inbox emails across **all connected email accounts** (work and
 This skill uses a 3-phase pipeline to read full email bodies without hitting context limits. Sub-agents each get their own context window, read and classify a batch of emails, and write structured results to temp files that the main agent compiles.
 
 > **CRITICAL — Email Fetching:**
-> - Make exactly ONE call: **`gmail_messages_list_all_accounts`** with `query: "in:inbox"` and NO other parameters
+> - Make exactly ONE call: **`gmail_messages_list_all_accounts`** with `query: "in:inbox"` and `max_results: 500`
 > - This single call returns results for every connected account — no need to list accounts first
-> - Do NOT pass `max_results` — omitting it returns ALL emails without any cap
+> - You MUST pass `max_results: 500` — the default is only 100 per account, which silently truncates results
 
 ### Phase 1: Discovery (Main Agent)
 
 1. **Fetch ALL inbox emails across every account in a single call:**
    ```
-   gmail_messages_list_all_accounts(query: "in:inbox")
+   gmail_messages_list_all_accounts(query: "in:inbox", max_results: 500)
    ```
-   This returns all accounts and all their inbox emails (read and unread). No other parameters needed.
+   This returns all accounts and all their inbox emails (read and unread). The `max_results: 500` overrides the default cap of 100.
    If an account returns an error or times out, report it and continue with others.
 2. **Report totals** to the user (e.g. "Found 47 emails in account-1, 12 in account-2")
    - **Truncation check:** If any account's count is a suspiciously round number (100, 200, 500), warn the user that results may be truncated and ask if they want to retry with a date filter (e.g. `in:inbox after:YYYY/MM/DD`) to get remaining emails
