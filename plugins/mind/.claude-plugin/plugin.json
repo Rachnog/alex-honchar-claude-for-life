@@ -1,0 +1,19 @@
+{
+  "name": "mind",
+  "description": "Mind life-area plugin for habit reflection, Streaks export analysis, and markdown reporting driven by Shortcut-first workflows",
+  "version": "1.0.0",
+  "author": {
+    "name": "Oleksandr Honchar"
+  },
+  "keywords": [
+    "mind",
+    "streaks",
+    "habits",
+    "habit-review",
+    "shortcuts",
+    "personal-analytics",
+    "markdown-reporting",
+    "life-area-plugin",
+    "alex-life-marketplace"
+  ]
+}

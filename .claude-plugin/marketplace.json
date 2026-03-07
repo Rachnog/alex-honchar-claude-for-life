@@ -21,6 +21,13 @@
       "version": "1.0.0",
       "source": "./plugins/work",
       "strict": true
+    },
+    {
+      "name": "mind",
+      "description": "Habit reflection and Streaks export analysis with Shortcut-first ingestion and markdown reporting",
+      "version": "1.0.0",
+      "source": "./plugins/mind",
+      "strict": true
     }
   ]
 }
