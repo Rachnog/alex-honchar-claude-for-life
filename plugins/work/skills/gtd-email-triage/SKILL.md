@@ -16,14 +16,22 @@ Read and classify emails across **all connected email accounts** (work and perso
 
 This skill uses a 3-phase pipeline to read full email bodies without hitting context limits. Sub-agents each get their own context window, read and classify a batch of emails, and write structured results to temp files that the main agent compiles.
 
+> **CRITICAL — Email Fetching Rules (DO NOT DEVIATE):**
+> - Use **`gmail_messages_list_all_accounts`** — this is a single call that returns all accounts at once
+> - Do **NOT** use `gmail_messages_list` (per-account variant) — it silently caps results
+> - Do **NOT** set `max_results` — omit the parameter entirely so the MCP returns ALL emails with no cap
+> - Violating any of these rules results in truncated email lists (typically capped at 100)
+
 ### Phase 1: Discovery (Main Agent)
 
 1. **List all connected accounts** using `accounts_list`
-2. **Fetch ALL unread email metadata from every account**
-   - Use `gmail_messages_list_all_accounts` with query `is:unread` and `max_results: 500` to get all accounts in one call
-   - The MCP tool handles pagination internally — just set `max_results` high enough (500+) to capture all unread emails
+2. **Fetch ALL unread email metadata** — call **`gmail_messages_list_all_accounts`** with query `is:unread`
+   - DO NOT use `gmail_messages_list` — that is the wrong tool
+   - DO NOT pass `max_results` — omit it entirely; the MCP will return everything without a cap
+   - This is a single call that covers all connected accounts at once
    - If an account returns an error or times out, report it and continue with others
 3. **Report totals** to the user (e.g. "Found 47 unread in account-1, 12 in account-2")
+   - **Truncation check:** If any account's count is a suspiciously round number (100, 200, 500), warn the user that results may be truncated and ask if they want to retry with a date filter (e.g. `is:unread after:YYYY/MM/DD`) to get remaining emails
 4. **Create temp directory** at `/tmp/claude-email-triage/` (wipe it clean if it exists from a prior run)
 5. **Write manifest** to `/tmp/claude-email-triage/manifest.json`:
    ```json
