@@ -1,11 +1,13 @@
 ---
 name: body-composition
-description: Analyze body composition data from Withings scale in context of Garmin training data. Trigger on: weight, body fat, muscle mass, BMI, bone mass, water percentage, body composition, recomposition, "how much do I weigh", body trends, or any question about body measurements.
+description: Provide specialist body-composition evidence from Withings data when `body-data-qa` or `body-cadence-review` needs composition-domain depth, or when the user explicitly asks for a body-composition-only deep dive.
 ---
 
-# Body — Composition
+# Body - Composition
 
 Analyze body composition from Withings, contextualized by Garmin training data.
+Use this as the composition specialist inside the body system.
+The default top-level entrypoint for normal questions is `body-data-qa`. This skill should mostly support the workflow skills unless the user explicitly wants composition-only depth.
 
 ## MCP Servers
 
@@ -15,21 +17,50 @@ Analyze body composition from Withings, contextualized by Garmin training data.
 
 ## Goals
 
-Read goals from 300 Areas/Body/CLAUDE.md before every analysis.
-Compare current measurements against composition goals and flag progress.
+Use the same reasoning order as the workflow skills:
+
+1. Read the guiding principles and strategy in `000 OS/` when available.
+2. Identify the relevant body systems and targets in the OS systems/targets document.
+3. Read the relevant body area guidance in `300 Areas/Body/`.
+4. Then compare current measurements against composition goals and flag progress.
 
 ## Analysis
 
-- Pull latest measurement from withings-mcp
-- For trends, pull last 14-30 days
-- Focus on trend lines, not individual measurements — single-day weight fluctuations are noise
-- Contextualize with Garmin training volume: is training supporting recomposition?
-- Track: gaining muscle while losing fat? Weight stable but composition improving?
-- Flag when trends move away from goals
+- Pull the latest measurement from `withings-mcp`.
+- For trends, pull 14-30 days and compare recent movement to the prior equivalent period when useful.
+- Focus on trend lines, not isolated weigh-ins. Single-day weight fluctuations are noise.
+- Contextualize with Garmin training volume when it helps explain recomposition.
+- Track recomposition patterns such as fat decreasing while muscle is stable or rising.
+- Flag when the trend direction moves away from goals even if scale weight looks superficially positive.
+
+## Output Contract
+
+If structured output is needed, keep the metric payload aligned with `../../schemas/body-composition.json`.
+Present the findings in prose under this shape:
+
+- `Current measurements` - latest body composition values
+- `Trend` - the direction of weight, fat, and muscle over the active window
+- `Interpretation` - whether the pattern suggests progress, stall, or regression
+- `Goal alignment` - how the trend maps to stated body-composition targets
+- `Caveats` - sparse weigh-ins, measurement noise, or missing training context
+
+## Escalation Rules
+
+Stay in `body-composition` when the user explicitly wants composition-only depth or when an upstream workflow already scoped the task to body measurements or recomposition.
+
+Escalate to:
+
+- `body-diet` when intake adherence is the main explanatory variable
+- `body-exercise` when training execution is the main explanatory variable
+- `body-data-qa` for ad-hoc cross-domain comparisons
+- `body-cadence-review` for ritualized multi-period reviews
 
 ## Resources
 
-Before giving recommendations, search 400 Resources/ for relevant material:
+Only search `400 Resources/` when this specialist is being used directly for a composition-only deep dive.
+When invoked from `body-data-qa` or `body-cadence-review`, let the upstream workflow decide whether resource-backed recommendations are needed.
+
+If a direct deep dive needs resource support:
 1. Use find and grep to locate files related to the current query
 2. Read .md and .txt files directly
 3. For PDFs, extract text and scan for relevant sections

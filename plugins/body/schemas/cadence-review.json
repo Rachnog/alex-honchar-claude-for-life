@@ -1,0 +1,234 @@
+{
+  "title": "Body Cadence Review",
+  "description": "Structured output for weekly, monthly, quarterly, or yearly body reviews",
+  "type": "object",
+  "properties": {
+    "review_period": {
+      "type": "string",
+      "enum": ["weekly", "monthly", "quarterly", "yearly"]
+    },
+    "review_window": {
+      "type": "object",
+      "properties": {
+        "start_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "end_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "comparison_label": { "type": "string" }
+      },
+      "required": ["start_date", "end_date", "comparison_label"]
+    },
+    "comparison_window": {
+      "type": "object",
+      "properties": {
+        "start_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "end_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "comparison_type": {
+          "type": "string",
+          "enum": ["previous-equivalent-period", "rolling-baseline", "custom", "none"]
+        }
+      },
+      "required": ["comparison_type"],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "comparison_type": {
+                "enum": ["previous-equivalent-period", "rolling-baseline", "custom"]
+              }
+            }
+          },
+          "then": {
+            "required": ["start_date", "end_date"]
+          }
+        }
+      ]
+    },
+    "domains": {
+      "type": "object",
+      "properties": {
+        "sleep": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["improving", "stable", "declining", "unavailable"] },
+            "key_metrics": { "type": "array", "items": { "type": "string" } },
+            "observation": { "type": "string" },
+            "goal_alignment": { "type": "string" },
+            "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+          },
+          "required": ["status", "key_metrics", "observation", "goal_alignment", "confidence"]
+        },
+        "recovery": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["improving", "stable", "declining", "unavailable"] },
+            "key_metrics": { "type": "array", "items": { "type": "string" } },
+            "observation": { "type": "string" },
+            "goal_alignment": { "type": "string" },
+            "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+          },
+          "required": ["status", "key_metrics", "observation", "goal_alignment", "confidence"]
+        },
+        "composition": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["improving", "stable", "declining", "unavailable"] },
+            "key_metrics": { "type": "array", "items": { "type": "string" } },
+            "observation": { "type": "string" },
+            "goal_alignment": { "type": "string" },
+            "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+          },
+          "required": ["status", "key_metrics", "observation", "goal_alignment", "confidence"]
+        },
+        "diet": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["improving", "stable", "declining", "unavailable"] },
+            "key_metrics": { "type": "array", "items": { "type": "string" } },
+            "observation": { "type": "string" },
+            "goal_alignment": { "type": "string" },
+            "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+          },
+          "required": ["status", "key_metrics", "observation", "goal_alignment", "confidence"]
+        },
+        "exercise": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["improving", "stable", "declining", "unavailable"] },
+            "key_metrics": { "type": "array", "items": { "type": "string" } },
+            "observation": { "type": "string" },
+            "goal_alignment": { "type": "string" },
+            "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+          },
+          "required": ["status", "key_metrics", "observation", "goal_alignment", "confidence"]
+        },
+        "medical_checkups": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "enum": ["improving", "stable", "declining", "unavailable"] },
+            "key_metrics": { "type": "array", "items": { "type": "string" } },
+            "observation": { "type": "string" },
+            "goal_alignment": { "type": "string" },
+            "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+          },
+          "required": ["status", "key_metrics", "observation", "goal_alignment", "confidence"]
+        }
+      },
+      "required": ["sleep", "recovery", "composition", "diet", "exercise", "medical_checkups"]
+    },
+    "cross_domain_correlations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "domains": { "type": "array", "items": { "type": "string" } },
+          "finding": { "type": "string" },
+          "evidence": { "type": "string" },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+        },
+        "required": ["domains", "finding", "evidence", "confidence"]
+      }
+    },
+    "systems_alignment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "system": { "type": "string" },
+          "status": { "type": "string", "enum": ["on-track", "mixed", "off-track", "unknown"] },
+          "comment": { "type": "string" }
+        },
+        "required": ["system", "status", "comment"]
+      }
+    },
+    "habits_alignment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "habit": { "type": "string" },
+          "status": { "type": "string", "enum": ["on-track", "mixed", "off-track", "unknown"] },
+          "comment": { "type": "string" }
+        },
+        "required": ["habit", "status", "comment"]
+      }
+    },
+    "principles_alignment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "principle": { "type": "string" },
+          "status": { "type": "string", "enum": ["supported", "mixed", "unsupported", "unknown"] },
+          "comment": { "type": "string" }
+        },
+        "required": ["principle", "status", "comment"]
+      }
+    },
+    "goal_progress": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "goal": { "type": "string" },
+          "status": { "type": "string", "enum": ["ahead", "on-track", "at-risk", "off-track", "unknown"] },
+          "evidence": { "type": "string" }
+        },
+        "required": ["goal", "status", "evidence"]
+      }
+    },
+    "key_changes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "top_priorities": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "recommendation": { "type": "string" },
+          "reason": { "type": "string" },
+          "linked_goal_or_system": { "type": "string" },
+          "priority": { "type": "string", "enum": ["high", "medium", "low"] }
+        },
+        "required": ["recommendation", "reason", "linked_goal_or_system", "priority"]
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "followups": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "caveats": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "overall_confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    }
+  },
+  "required": [
+    "review_period",
+    "review_window",
+    "comparison_window",
+    "domains",
+    "cross_domain_correlations",
+    "systems_alignment",
+    "habits_alignment",
+    "principles_alignment",
+    "goal_progress",
+    "key_changes",
+    "top_priorities",
+    "recommendations",
+    "risks",
+    "followups",
+    "caveats",
+    "overall_confidence"
+  ]
+}

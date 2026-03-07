@@ -1,13 +1,19 @@
 {
   "name": "body",
-  "description": "Body life-area plugin for the alex-life marketplace, with internal skills for sleep, recovery, composition, diet, exercise, medical checkups, and overview",
-  "version": "1.0.0",
+  "description": "Body life-area plugin for ad-hoc body data Q&A and structured cadence reviews, powered by specialist sleep, recovery, composition, diet, exercise, and medical skills",
+  "version": "1.1.0",
   "author": {
     "name": "Oleksandr Honchar"
   },
   "keywords": [
     "body",
     "health",
+    "data-qa",
+    "cadence-review",
+    "weekly-review",
+    "monthly-review",
+    "quarterly-review",
+    "yearly-review",
     "sleep",
     "recovery",
     "composition",

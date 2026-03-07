@@ -1,12 +1,14 @@
 ---
 name: body-exercise
-description: Analyze exercise consistency, training progression, and workload management from Garmin. Trigger on: exercise, workout plan, gym consistency, training volume, training frequency, cardio, strength progress, mobility, "am I training enough", or any question about training habits and execution.
+description: Provide specialist exercise evidence from Garmin when `body-data-qa` or `body-cadence-review` needs training-domain depth, or when the user explicitly asks for an exercise-only deep dive.
 ---
 
-# Body — Exercise
+# Body - Exercise
 
 Analyze exercise behavior and training consistency with a focus on execution
 against defined habits and systems.
+Use this as the exercise specialist inside the body system.
+The default top-level entrypoint for normal questions is `body-data-qa`. This skill should mostly support the workflow skills unless the user explicitly wants exercise-only depth.
 
 ## MCP Server
 
@@ -15,26 +17,54 @@ activity sessions, and related performance signals.
 
 ## Goals
 
-Read goals from 300 Areas/Body/CLAUDE.md before every analysis.
-Prioritize alignment with:
+Use the same reasoning order as the workflow skills:
+
+1. Read the guiding principles and strategy in `000 OS/` when available.
+2. Identify the relevant body systems and targets in the OS systems/targets document.
+3. Read the relevant body area guidance in `300 Areas/Body/`.
+4. Then prioritize alignment with:
 - gym 4x+ per week habit
 - strength/cardio/mobility balance
 - sustainable progression over intensity spikes
 
 ## Analysis
 
-- Pull current week and last 4 weeks from garmin-mcp
-- Evaluate session frequency against weekly habit target
-- Compare recent load vs historical baseline to flag over/under-loading
-- Assess pattern consistency (missed streaks, irregular session timing)
-- Distinguish volume progress from random single hard sessions
-- Correlate training pattern with sleep/recovery context when relevant
+- Pull the current week and the last four weeks from `garmin-mcp`.
+- Evaluate session frequency against the weekly habit target.
+- Compare recent load versus the historical baseline to flag over-loading and under-loading.
+- Assess pattern consistency such as missed streaks or irregular session timing.
+- Distinguish real progression from isolated hard-session spikes.
+- Correlate the training pattern with sleep and recovery context when relevant.
 - For planning questions, recommend next 7 days intensity mix:
   - hard / moderate / light / rest distribution
 
+## Output Contract
+
+If structured output is needed, keep the metric payload aligned with `../../schemas/exercise.json`.
+Present the findings in prose under this shape:
+
+- `Current execution` - recent training frequency and load
+- `Trend` - how consistency and load changed over the active window
+- `Habit alignment` - whether behavior matches the stated system and weekly targets
+- `Interpretation` - whether the pattern suggests progress, drift, or unsustainable spikes
+- `Caveats` - missing activity capture, ambiguous workout labels, or weak context
+
+## Escalation Rules
+
+Stay in `body-exercise` when the user explicitly wants exercise-only depth or when an upstream workflow already scoped the task to training behavior and execution.
+
+Escalate to:
+
+- `body-recovery` when the real question is intensity readiness or rest-day choice
+- `body-data-qa` for ad-hoc comparisons with diet, sleep, or composition
+- `body-cadence-review` for structured weekly, monthly, quarterly, or yearly reviews
+
 ## Resources
 
-Before giving recommendations, search 400 Resources/ for relevant material:
+Only search `400 Resources/` when this specialist is being used directly for an exercise-only deep dive.
+When invoked from `body-data-qa` or `body-cadence-review`, let the upstream workflow decide whether resource-backed recommendations are needed.
+
+If a direct deep dive needs resource support:
 1. Use find and grep to locate files related to the current query
 2. Read .md and .txt files directly
 3. For PDFs, extract text and scan for relevant sections

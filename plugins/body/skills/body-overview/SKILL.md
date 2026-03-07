@@ -1,76 +1,61 @@
 ---
 name: body-overview
-description: Full-picture health analysis combining all wearable and nutrition data sources. Trigger on: "full body report", "overall health", "weekly summary", "how am I doing", "sync body", "body overview", "health dashboard", or any broad health question that spans sleep, recovery, body composition, and diet.
+description: Legacy compatibility entrypoint only for explicit old wording such as "body overview", "full body report", or "health dashboard". Route those requests to `body-data-qa` for ad-hoc synthesis or `body-cadence-review` for structured weekly, monthly, quarterly, or yearly reviews.
 ---
 
-# Body — Overview
+# Body - Overview
 
-Full-picture analysis combining data from wearable and nutrition systems.
-Use this when the question spans multiple domains or asks for a holistic view.
+This skill exists for compatibility with the older domain-first routing model.
+It should not be the main long-term workflow surface.
+Do not use it for ordinary broad body questions unless the user explicitly uses this older wording.
 
-## MCP Servers
+Use it to route broad requests:
 
-- oura-mcp — sleep, readiness, HRV, activity
-- garmin-mcp — training load, VO2max, steps, workouts, body battery
-- withings-mcp — weight, body fat %, muscle mass, BMI
-- yazio-mcp — calories, macros, meal logs, hydration, nutrition goals
+- ad-hoc broad question -> `body-data-qa`
+- ritualized weekly/monthly/quarterly/yearly review -> `body-cadence-review`
 
-## Goals
+Do not duplicate synthesis logic here. Route first, then let the downstream workflow pull data, read goals, and search resources.
 
-Read goals from 300 Areas/Body/CLAUDE.md before every analysis.
-Compare all data against all goals. Flag overall progress and regressions.
+## Downstream Workflows
 
-## Analysis
+- `body-data-qa` for default ad-hoc body questions
+- `body-cadence-review` for structured reviews and period comparisons
 
-Pull from all four MCPs and cross-correlate:
+## Routing Logic
 
-**Recovery vs training:**
-- Is training load aligned with recovery capacity?
-- Are hard training days happening when readiness is low?
+Choose the target workflow before doing heavy analysis.
 
-**Sleep vs training:**
-- How is training intensity affecting HRV and deep sleep trends?
-- Any pattern of declining sleep quality with increased load?
+Route to `body-data-qa` when:
 
-**Composition vs training:**
-- Is training volume supporting body recomposition goals?
-- Are weight/fat/muscle trends moving in the right direction?
+- the user asks a broad but still targeted question
+- the user wants a current snapshot or a quick comparison
+- the request does not require a formal cadence review
 
-**Nutrition vs training and recovery:**
-- Is calorie intake aligned with training load and recovery demand?
-- Are protein and hydration adherence supporting recovery quality?
-- Is poor sleep or low readiness linked to under-fueling or late heavy intake patterns?
+Route to `body-cadence-review` when:
 
-**Nutrition vs composition:**
-- Are calorie/macro trends supporting fat-loss or recomposition goals?
-- Is weight trend direction consistent with intake and training behavior?
+- the user asks for a weekly, monthly, quarterly, or yearly review
+- the request explicitly compares periods
+- the answer requires checking systems, habits, goals, principles, and resources together
 
-**Overall trajectory:**
-- Are all signals aligned toward goals or are there conflicts?
-- What's the single most important thing to address right now?
+## Specialist Inputs
 
-For trends, pull 7-14 days minimum from each source.
+Both workflows should rely on specialist domain evidence from:
 
-## Resources
+- `body-sleep`
+- `body-recovery`
+- `body-composition`
+- `body-diet`
+- `body-exercise`
+- `body-medical-checkups`
 
-Before giving recommendations, search 400 Resources/ for relevant material:
-1. Use find and grep to locate files related to the current query
-2. Read .md and .txt files directly
-3. For PDFs, extract text and scan for relevant sections
-4. For Excel files, read and parse relevant sheets
-5. Prioritize newer files over older ones
-6. Cite which resource informed your recommendation
-
-Search broadly — file names may not be descriptive. Look at actual content.
+This skill should avoid duplicating specialist logic.
 
 ## Tone
 
-Quant analyst reviewing a dashboard. Numbers first, brief context, no fluff.
+Routing layer only. Be brief and decisive.
 
 ## Schemas
 
-Reference plugin-local schemas for field definitions:
-- ../../schemas/sleep.json
-- ../../schemas/recovery.json
-- ../../schemas/body-composition.json
-- ../../schemas/diet.json
+Compatibility wrapper only. Prefer the downstream workflow schema rules:
+- `body-data-qa` -> no single schema for synthesized ad-hoc answers; use a domain schema only when returning structured domain evidence
+- `body-cadence-review` -> `../../schemas/cadence-review.json`

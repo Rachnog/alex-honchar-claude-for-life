@@ -6,9 +6,14 @@ This document defines conventions for adding future life-area plugins to this ma
 
 - Plugin folder: `plugins/<area>/`
 - Plugin name in manifest: `<area>`
-- Internal skill name: `<area>-<domain>`
-- Skill folder: `plugins/<area>/skills/<area>-<domain>/`
-- Skill file: `plugins/<area>/skills/<area>-<domain>/SKILL.md`
+- Internal skill name: `<area>-<specialty>`
+- Skill folder: `plugins/<area>/skills/<area>-<specialty>/`
+- Skill file: `plugins/<area>/skills/<area>-<specialty>/SKILL.md`
+
+`<specialty>` can be either:
+
+- a domain such as `sleep` or `diet`
+- a workflow such as `data-qa` or `cadence-review`
 
 Examples:
 - `plugins/body/skills/body-sleep/SKILL.md`
@@ -23,7 +28,7 @@ plugins/<area>/
 ├── .claude-plugin/
 │   └── plugin.json
 ├── skills/
-│   └── <area>-<domain>/
+│   └── <area>-<specialty>/
 │       └── SKILL.md
 └── schemas/
     └── *.json
@@ -63,6 +68,11 @@ Each `SKILL.md` should include:
 - data-quality caveats when sources can be missing
 - schema reference when applicable
 
+When a plugin uses a workflow-first model:
+- define the primary workflow entrypoints clearly
+- document which specialist skills support them
+- keep compatibility wrappers thin if legacy routing still exists
+
 ## 5) MCP Dependency Guidance
 
 MCP dependencies are documented in skill files and README matrices.
@@ -88,7 +98,7 @@ Before publishing/updating marketplace:
 5. README documents:
    - current plugins
    - setup flow
-   - any new routing/usage behavior
+   - any new routing or usage behavior, especially workflow-first versus specialist routing
 6. Plugin appears in Discover after marketplace refresh.
 
 ## 8) Privacy Rule
