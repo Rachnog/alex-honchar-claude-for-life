@@ -37,32 +37,36 @@ This ordering is mandatory because recommendations must be checked against inten
 
 ## Supporting Inputs
 
-- `mind:streaks-export-analysis` - optional habits-adherence evidence from a Streaks export or a recent Streaks report
+- `mind:streaks-export-analysis` - required habits-adherence evidence for weekly and monthly body reviews, acquired via Apple Shortcuts
 
-Use Streaks evidence when the review needs direct proof of routine execution, maintenance habits, or behavior that sensors do not capture well, such as supplements, stretching, journaling, rehab, or wind-down routines.
-Do not treat Streaks as a replacement for biometric sources; it is supporting behavior evidence.
+For weekly and monthly body reviews, Streaks is mandatory. Use Apple Shortcuts to get the export. Do not search the filesystem for old `.streaks` files and do not continue without Streaks data.
+Streaks is not a replacement for biometric sources, but it is a required input for confirming routine execution, maintenance habits, and systems adherence.
 
 ## Review Workflow
 
 1. Determine the review period and the comparison window.
 2. Read the OS, systems/targets, and area guidance before drawing conclusions.
 3. Pull the relevant windows from each active data source.
-4. If the review is substantially about habits, systems, or routine adherence, use `mind:streaks-export-analysis`.
-   - For live or recent windows such as `this week`, `last week`, `this month`, or `last month`, prefer a fresh Streaks export unless the user explicitly wants to reuse an existing report.
-   - For older or clearly file-based reviews, a recent saved Streaks report is acceptable when the user authorizes it.
-5. Ask each specialist domain to produce its evidence:
+4. For weekly and monthly reviews, get Streaks data through Apple Shortcuts before continuing.
+   - If Streaks data is not already provided, ask the user to run the Shortcut export and stop there.
+   - Do not continue with only Oura, Garmin, Withings, and Yazio.
+   - Do not silently use an old file on disk.
+   - Do not finish the review and mention missing Streaks only in caveats.
+   - Preferred wording: `To complete this weekly/monthly body review, run your Apple Shortcuts Streaks export and pass me the resulting file or payload. I need that before I can finalize the review.`
+5. Use `mind:streaks-export-analysis` to interpret the Streaks export and provide habits-adherence evidence.
+6. Ask each specialist domain to produce its evidence:
    - `body-sleep`
    - `body-recovery`
    - `body-composition`
    - `body-diet`
    - `body-exercise`
    - `body-medical-checkups`
-6. Compare the current period to the prior equivalent period when possible.
-7. Compare domains against each other, not just against their own history.
-8. Cross-check findings against goals, habits, maintenance systems, and stated principles.
-9. Use Streaks evidence to strengthen `habits_alignment` and `systems_alignment`, especially when the biometrics alone do not explain execution quality.
-10. Search `400 Resources/` when recommendations need more context.
-11. Produce a structured review with priorities, caveats, and next actions.
+7. Compare the current period to the prior equivalent period when possible.
+8. Compare domains against each other, not just against their own history.
+9. Cross-check findings against goals, habits, maintenance systems, and stated principles.
+10. Use Streaks evidence to strengthen `habits_alignment` and `systems_alignment`, especially when the biometrics alone do not explain execution quality.
+11. Search `400 Resources/` when recommendations need more context.
+12. Produce a structured review with priorities, caveats, and next actions.
 
 ## What To Compare
 
@@ -125,6 +129,34 @@ Structure the review around:
 - recommended next actions
 
 The response should be detailed enough to feel like a real review, but still numbers-first and decision-oriented.
+
+## File Saving
+
+Weekly and monthly body reviews must always create report files. Do not ask whether to save them.
+
+Save rules:
+
+- monthly reviews: save inside the correct month-name subfolder under the monthly parent in `Periodics`
+- weekly reviews: save inside the correct `Week N` subfolder under the weekly parent in `Periodics`
+- if both a monthly and weekly review are requested together, create both files
+- create the period folder only if it does not already exist
+
+Use commands shaped like:
+
+```bash
+# Monthly review
+mkdir -p "$PERIODICS_ROOT/Monthly/$MONTH_NAME"
+
+# Weekly review
+mkdir -p "$PERIODICS_ROOT/Weekly/Week $ISO_WEEK"
+```
+
+Example output paths:
+
+- monthly: `$PERIODICS_ROOT/Monthly/February/2026-02-body-review.md`
+- weekly: `$PERIODICS_ROOT/Weekly/Week 10/2026-week-10-body-review.md`
+
+If the review cannot be completed because Streaks data has not yet been provided, do not create the final review files yet. Create them only after the required Streaks input is available and the review can be completed.
 
 ## Resources
 

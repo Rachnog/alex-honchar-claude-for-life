@@ -29,6 +29,8 @@ Use this skill when the user asks to:
 - use Apple Shortcuts and Claude Code to automate Streaks reporting
 - review habit performance from Streaks with strongest tasks, weakest tasks, and patterns
 
+When this skill is being used to support a weekly or monthly `body-cadence-review`, its output is required before the body review can be finalized.
+
 ## Intake Paths
 
 Support these paths in order.
@@ -60,6 +62,8 @@ Use wording like:
 
 - `To answer that from fresh Streaks data, run your Streaks Shortcut export first and give me the resulting file or payload.`
 - `If you want, I can help you set up the Shortcut plus shell flow so this becomes one command.`
+
+For a weekly or monthly body-review flow, this ask is mandatory. Do not let the downstream review finish until the Shortcut-provided Streaks export has been supplied and analyzed.
 
 For a request such as `get my streaks performance this week and last month`, the preferred first response is:
 
@@ -438,6 +442,8 @@ Examples:
 - weekly: `$PERIODICS_ROOT/Weekly/Week 10/2026-week-10-streaks-report.md`
 
 Only create the folder if it does not already exist. `mkdir -p` is the preferred command because it is safe when the folder already exists.
+
+When this skill is supporting `body-cadence-review`, keep the save-path rules compatible with the body review's mandatory `Periodics` output. The body review may save its own final report separately, but this skill must not suggest skipping file creation for the weekly/monthly review flow.
 
 If the user only asks for analysis and does not request a file:
 
