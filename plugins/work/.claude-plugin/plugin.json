@@ -1,0 +1,11 @@
+{
+  "name": "work",
+  "description": "Work life-area plugin for the alex-life marketplace — email and calendar triage, inbox classification, and GTD-style prioritization",
+  "version": "1.0.0",
+  "author": { "name": "Oleksandr Honchar" },
+  "keywords": [
+    "work", "email", "triage", "gtd", "getting-things-done",
+    "calendar", "inbox", "classification", "life-area-plugin",
+    "alex-life-marketplace"
+  ]
+}

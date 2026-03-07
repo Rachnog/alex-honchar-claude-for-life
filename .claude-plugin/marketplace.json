@@ -4,8 +4,8 @@
     "name": "Oleksandr Honchar"
   },
   "metadata": {
-    "description": "Personal multi-area plugin marketplace for Claude Code, shipping body and shadow-and-soul domain capabilities",
-    "version": "2.2.0"
+    "description": "Personal multi-area plugin marketplace for Claude Code, shipping body, shadow-and-soul, and work domain capabilities",
+    "version": "2.3.0"
   },
   "plugins": [
     {
@@ -20,6 +20,13 @@
       "description": "Inner life analytics — journal sentiment, emotional patterns, and subjective-vs-objective correlations",
       "version": "1.0.0",
       "source": "./plugins/shadow-and-soul",
+      "strict": true
+    },
+    {
+      "name": "work",
+      "description": "Work management — email triage, GTD workflows, and productivity automation",
+      "version": "1.0.0",
+      "source": "./plugins/work",
       "strict": true
     }
   ]
