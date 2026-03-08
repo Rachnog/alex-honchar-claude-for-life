@@ -54,8 +54,30 @@ This ordering is mandatory because recommendations must be checked against inten
 
 - `mind:streaks-export-analysis` - required habits-adherence evidence for weekly and monthly body reviews, acquired via Apple Shortcuts
 
-For weekly and monthly body reviews, Streaks is mandatory. Use Apple Shortcuts to get the export. Do not search the filesystem for old `.streaks` files and do not continue without Streaks data.
 Streaks is not a replacement for biometric sources, but it is a required input for confirming routine execution, maintenance habits, and systems adherence.
+
+## Hard Gate — Streaks for Weekly and Monthly Reviews
+
+For weekly and monthly reviews, run `shortcuts run "Streaks Export"` via Bash in the SAME parallel batch as MCP data pulls. This is not a later step — it fires at the same time as Oura, Garmin, Withings, and Yazio calls.
+
+If the shortcut succeeds: save the output, then invoke `mind:streaks-export-analysis` to interpret it.
+If the shortcut fails (non-zero exit, empty output, shortcut not found): STOP. Ask the user to provide the export manually. Do not continue.
+
+Do not produce any review output — no scorecard, no domain summaries, no recommendations, no files — until Streaks data is resolved.
+
+Forbidden:
+- Pulling MCP data first, then asking the user for Streaks as an afterthought
+- Producing a "draft" or "partial" review without Streaks
+- Mentioning missing Streaks only as a caveat in an otherwise complete review
+- Skipping the `shortcuts run` attempt and going straight to a manual ask
+- Treating Streaks as a "nice to have" that can come later
+
+| Rationalization | Why it is wrong |
+|---|---|
+| "I'll present the biometric data first" | Streaks runs in parallel with MCP pulls. There is no "first." |
+| "The user can provide Streaks later" | You must try `shortcuts run` yourself before asking. |
+| "A draft review is useful even without Streaks" | The skill forbids any review output without Streaks. STOP. |
+| "Streaks is supplementary" | For weekly and monthly reviews, Streaks is mandatory input, not supplementary. |
 
 ## Review Workflow
 
@@ -64,33 +86,28 @@ Streaks is not a replacement for biometric sources, but it is a required input f
    - For `monthly`, define the current calendar month and the immediately previous calendar month.
    - If both are requested, keep both window pairs explicit all the way through the review.
 2. Read the OS, systems/targets, and area guidance before drawing conclusions.
-3. Pull the relevant windows from each active data source.
-4. For weekly and monthly reviews, get Streaks data through Apple Shortcuts before continuing.
-   - If Streaks data is not already provided, first try to run the Shortcut automatically via the `shortcuts` CLI.
-   - Prefer the shortcut named `Streaks Export` when it exists.
-   - Example command: `shortcuts run "Streaks Export"`
-   - If the automatic Shortcut run fails, the shortcut is missing, or the output is unusable, then ask the user to run the Shortcut manually and stop there.
-   - Do not continue with only Oura, Garmin, Withings, and Yazio.
-   - Do not silently use an old file on disk.
-   - Do not finish the review and mention missing Streaks only in caveats.
-   - Preferred fallback wording: `I tried to run your Apple Shortcuts Streaks export automatically, but I still need the resulting file or payload to complete this weekly/monthly body review.`
-5. Use `mind:streaks-export-analysis` to interpret the Streaks export and provide habits-adherence evidence.
-6. Ask each specialist domain to produce its evidence:
+3. Execute ALL of the following in parallel (single tool-call batch):
+   a. Pull the relevant windows from each active MCP data source (Oura, Garmin, Withings, Yazio).
+   b. For weekly and monthly reviews: run `shortcuts run "Streaks Export"` via Bash.
+   If the shortcut fails, STOP — see the Hard Gate section above.
+   For quarterly and yearly reviews, skip Streaks (not required).
+4. For weekly and monthly reviews: invoke `mind:streaks-export-analysis` to interpret the Streaks export and produce habits-adherence evidence.
+5. Ask each specialist domain to produce its evidence:
    - `body-sleep`
    - `body-recovery`
    - `body-composition`
    - `body-diet`
    - `body-exercise`
    - `body-medical-checkups`
-7. Compare the current period to the prior equivalent calendar period.
+6. Compare the current period to the prior equivalent calendar period.
    - Weekly means `this week` vs `last week`.
    - Monthly means `this month` vs `last month`.
    - Do not substitute rolling windows unless they are explicitly labeled as supplemental context.
-8. Compare domains against each other, not just against their own history.
-9. Cross-check findings against goals, habits, maintenance systems, and stated principles.
-10. Use Streaks evidence to strengthen `habits_alignment` and `systems_alignment`, especially when the biometrics alone do not explain execution quality.
-11. Search `400 Resources/` when recommendations need more context.
-12. Produce a structured review with priorities, caveats, and next actions.
+7. Compare domains against each other, not just against their own history.
+8. Cross-check findings against goals, habits, maintenance systems, and stated principles.
+9. Use Streaks evidence to strengthen `habits_alignment` and `systems_alignment`, especially when the biometrics alone do not explain execution quality.
+10. Search `400 Resources/` when recommendations need more context.
+11. Produce a structured review with priorities, caveats, and next actions.
 
 ## What To Compare
 
