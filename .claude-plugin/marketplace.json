@@ -5,7 +5,7 @@
   },
   "metadata": {
     "description": "Personal multi-area plugin marketplace for Claude Code, shipping body and work domain capabilities",
-    "version": "2.5.0"
+    "version": "2.6.0"
   },
   "plugins": [
     {
@@ -18,7 +18,7 @@
     {
       "name": "work",
       "description": "Work management — email triage, GTD workflows, and productivity automation",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "source": "./plugins/work",
       "strict": true
     },
