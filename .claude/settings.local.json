@@ -2,7 +2,17 @@
   "permissions": {
     "allow": [
       "Bash(git status:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(npx skills:*)",
+      "Read(//Users/oleksandrhonchar/.claude/plugins/cache/alex-life-marketplace/work/**)",
+      "Read(//Users/oleksandrhonchar/.claude/plugins/cache/alex-life-marketplace/work/1.0.0/**)",
+      "Bash(python3:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(while read dir)",
+      "Bash(do echo \"=== $dir ===\")",
+      "Read(//Users/oleksandrhonchar/Documents/GitHub/alex-honchar-claude-for-life/**)",
+      "Bash(done)"
     ]
   }
 }

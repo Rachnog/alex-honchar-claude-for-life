@@ -49,7 +49,9 @@ Each platform has a URL, and a specific sequence of UI actions to enable deep re
 
 ### Phase 1: Get the Research Query
 
-Ask the user for their research query if they haven't already provided one. The query should be detailed enough for deep research — encourage them to be specific.
+Ask the user for their research query if they haven't already provided one.
+
+**CRITICAL — Query Preservation Rule**: Use the user's query EXACTLY as provided. Do NOT rephrase, reword, shorten, expand, or "improve" it in any way. Copy the text character-for-character into every platform. If you feel the query is ambiguous, ask the user to clarify — do not silently modify it.
 
 ### Phase 2: Open All Tabs
 
@@ -72,7 +74,7 @@ The general approach for each platform:
 Tips for specific platforms:
 
 - **ChatGPT**: The "+" button is typically near the message input area. After clicking it, a menu appears — look for "Deep Research" in the menu items.
-- **Claude**: Similar to ChatGPT — "+" button near the input, then select "Research" from the menu. If the `find` tool doesn't work to locate the "Research" menuitem, use `read_page` with `filter: "interactive"` to get all interactive elements and find the one labeled "Research". IMPORTANT: After submitting the research query, Claude will ask for **tool use permission** (e.g., "Allow Claude to use web search?" or similar). The user must manually accept this in their browser — remind the user to allow it when you see it, or note in your status report that Claude needs tool use approval.
+- **Claude**: Similar to ChatGPT — "+" button near the input, then select "Research" from the menu. If the `find` tool doesn't work to locate the "Research" menuitem, use `read_page` with `filter: "interactive"` to get all interactive elements and find the one labeled "Research". **HARD GATE — Never fall back to standard chat**: If after trying both `find` and `read_page` you still cannot locate the "Research" mode option, do NOT submit the query in regular chat mode. Instead, stop, tell the user: "I cannot find the Research mode option on Claude. Please enable it manually (it may need to be turned on in your Claude settings or plan), then let me know when it's ready." Wait for the user to confirm before proceeding with Claude's tab. IMPORTANT: After submitting the research query, Claude will ask for **tool use permission** (e.g., "Allow Claude to use web search?" or similar). The user must manually accept this in their browser — remind the user to allow it when you see it, or note in your status report that Claude needs tool use approval.
 - **Gemini**: "Tools" is typically a button/tab in the UI. After clicking, look for "Deep Research" option. Gemini may show a research plan — accept the default plan without modification.
 - **Grok**: "Expert" appears as a mode selector near/right of the search bar. It may be a toggle or button.
 - **Parallel**: There's a dropdown in the search bar area. Click it and select "Ultra8x".
@@ -177,6 +179,10 @@ These tips come from actual test runs and address common pitfalls:
 13. **ChatGPT canvas not extractable**: ChatGPT Deep Research produces results in a "canvas" document panel that is NOT accessible to browser automation. `get_page_text` returns only the user's query text. `read_page` shows internal links, not actual content. `javascript_tool` is blocked on chatgpt.com. Clicking expand, download, or title icons does not help. **Workaround**: Create a placeholder file with the ChatGPT conversation link and instruct the user to copy the content manually.
 
 14. **Manus document extraction**: `get_page_text` fails on Manus with "No semantic content element found and page body is too large". The fix: at the bottom of the Manus chat, there is a document thumbnail/card showing the final report title (e.g., "Produce and deliver the final comprehensive report"). Click this card — it opens a document viewer modal. Then use `read_page` with `depth: 15` and `max_chars: 80000+` on the modal to extract the full report content from the accessibility tree.
+
+15. **Query must be used verbatim**: Never paraphrase or rewrite the user's research query. Enter it character-for-character on every platform. Editing queries — even with good intentions — changes the research results and violates user intent.
+
+16. **Claude Research mode is mandatory**: If the Research mode menu item cannot be found on Claude after exhausting `find` and `read_page` approaches, do NOT fall back to standard chat. Pause and ask the user to enable it manually, waiting for their confirmation before continuing.
 
 ## Phase 7: Result Extraction and Saving
 
