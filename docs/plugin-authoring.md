@@ -68,6 +68,24 @@ Each `SKILL.md` should include:
 - data-quality caveats when sources can be missing
 - schema reference when applicable
 
+### Compatibility Block
+
+Skills that require specific MCP tools or browser automation tools should declare a `compatibility` block in their YAML frontmatter, listing each required tool by its full `mcp__*` name:
+
+```yaml
+---
+name: my-skill
+description: What this skill does.
+compatibility:
+  - tool: mcp__some-server__tool_name
+  - tool: mcp__another-server__tool_name
+---
+```
+
+Use the exact tool name as it appears in the available tools list (lowercase, with hyphens for the server segment). This is most important for skills that depend on browser automation (Claude in Chrome tools) or specific MCP servers that may not always be connected.
+
+Skills that use only local resources, Bash, or the filesystem do not need a compatibility block.
+
 When a plugin uses a workflow-first model:
 - define the primary workflow entrypoints clearly
 - document which specialist skills support them
@@ -101,7 +119,30 @@ Before publishing/updating marketplace:
    - any new routing or usage behavior, especially workflow-first versus specialist routing
 6. Plugin appears in Discover after marketplace refresh.
 
-## 8) Privacy Rule
+## 8) Vault Path Conventions
+
+Skills that write files to the Obsidian vault use `$PERIODICS_ROOT` as a placeholder for the periodic notes folder. This maps to the `100 Periodics/` directory in the vault, as defined by the vault structure in `CLAUDE.md`:
+
+```text
+100 Periodics/    <- weekly/monthly reflections
+```
+
+When resolving `$PERIODICS_ROOT` at runtime:
+- Claude should derive the full absolute path from the vault root visible in `CLAUDE.md`
+- Do not hardcode an absolute path in skills — the vault location varies per machine
+- If the path cannot be resolved, ask the user before creating directories
+
+Example paths once resolved:
+
+```bash
+# Monthly review
+mkdir -p "$PERIODICS_ROOT/Monthly/February"
+
+# Weekly review
+mkdir -p "$PERIODICS_ROOT/Weekly/Week 10"
+```
+
+## 9) Privacy Rule
 
 Do not commit private vault prompt files or personal templates.
 Keep vault-specific `CLAUDE.md` files in your private Obsidian vault only.

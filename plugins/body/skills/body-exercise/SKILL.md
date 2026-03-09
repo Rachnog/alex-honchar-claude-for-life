@@ -1,6 +1,10 @@
 ---
 name: body-exercise
 description: Provide specialist exercise evidence from Garmin when `body-data-qa` or `body-cadence-review` needs training-domain depth, or when the user explicitly asks for an exercise-only deep dive.
+compatibility:
+  - tool: mcp__garmin-connect__get_activities
+  - tool: mcp__garmin-connect__get_weekly_volume
+  - tool: mcp__garmin-connect__get_activity_details
 ---
 
 # Body - Exercise

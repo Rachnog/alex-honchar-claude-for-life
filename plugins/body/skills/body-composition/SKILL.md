@@ -1,6 +1,10 @@
 ---
 name: body-composition
 description: Provide specialist body-composition evidence from Withings data when `body-data-qa` or `body-cadence-review` needs composition-domain depth, or when the user explicitly asks for a body-composition-only deep dive.
+compatibility:
+  - tool: mcp__withings__withings_get_weight
+  - tool: mcp__withings__withings_get_body_composition
+  - tool: mcp__garmin-connect__get_activities
 ---
 
 # Body - Composition

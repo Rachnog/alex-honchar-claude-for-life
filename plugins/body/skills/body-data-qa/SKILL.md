@@ -1,6 +1,11 @@
 ---
 name: body-data-qa
 description: Default top-level entrypoint for ad-hoc body questions. Use for direct questions about current status, recent trends, metric interpretation, or targeted cross-checks across sleep, recovery, exercise, diet, body composition, and medical data when a structured cadence review is not requested.
+compatibility:
+  - tool: mcp__oura__get_daily_sleep
+  - tool: mcp__garmin-connect__get_activities
+  - tool: mcp__withings__withings_get_weight
+  - tool: mcp__yazio__get_user_daily_summary
 ---
 
 # Body - Data Q&A

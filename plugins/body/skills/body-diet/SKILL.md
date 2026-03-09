@@ -1,6 +1,10 @@
 ---
 name: body-diet
 description: Provide specialist nutrition evidence from Yazio when `body-data-qa` or `body-cadence-review` needs diet-domain depth, or when the user explicitly asks for a nutrition-only deep dive.
+compatibility:
+  - tool: mcp__yazio__get_user_daily_summary
+  - tool: mcp__yazio__get_user_consumed_items
+  - tool: mcp__yazio__get_user_water_intake
 ---
 
 # Body - Diet

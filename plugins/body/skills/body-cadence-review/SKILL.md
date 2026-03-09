@@ -1,6 +1,11 @@
 ---
 name: body-cadence-review
 description: Run structured weekly, monthly, quarterly, or yearly body reviews that compare time periods, cross-check multiple body data sources, and generate recommendations grounded in principles, goals, habits, systems, and local body documents. Trigger on review, recap, retrospective, compare periods, progress review, or holistic body check-in requests.
+compatibility:
+  - tool: mcp__oura__get_daily_sleep
+  - tool: mcp__garmin-connect__get_activities
+  - tool: mcp__withings__withings_get_weight
+  - tool: mcp__yazio__get_user_daily_summary
 ---
 
 # Body - Cadence Review

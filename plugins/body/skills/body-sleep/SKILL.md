@@ -1,6 +1,9 @@
 ---
 name: body-sleep
 description: Provide specialist sleep evidence using Oura data when `body-data-qa` or `body-cadence-review` needs sleep-domain depth, or when the user explicitly asks for a sleep-only deep dive rather than general body Q&A.
+compatibility:
+  - tool: mcp__oura__get_daily_sleep
+  - tool: mcp__oura__get_sleep
 ---
 
 # Body - Sleep
@@ -78,4 +81,4 @@ Quant analyst reviewing a dashboard. Numbers first, brief context, no fluff.
 
 ## Schema
 
-Reference ../../schemas/sleep.json for field definitions.
+Reference `../../schemas/sleep.json` for field definitions.

@@ -10,14 +10,14 @@ description: >
   in-depth research. Also triggers when the user mentions wanting to use multiple AI tools for
   research, or asks to "search all AIs", "ask all the AIs", or "get research from every platform".
 compatibility:
-  - tool: mcp__Claude_in_Chrome__tabs_context_mcp
-  - tool: mcp__Claude_in_Chrome__tabs_create_mcp
-  - tool: mcp__Claude_in_Chrome__navigate
-  - tool: mcp__Claude_in_Chrome__computer
-  - tool: mcp__Claude_in_Chrome__find
-  - tool: mcp__Claude_in_Chrome__read_page
-  - tool: mcp__Claude_in_Chrome__form_input
-  - tool: mcp__Claude_in_Chrome__get_page_text
+  - tool: mcp__claude-in-chrome__tabs_context_mcp
+  - tool: mcp__claude-in-chrome__tabs_create_mcp
+  - tool: mcp__claude-in-chrome__navigate
+  - tool: mcp__claude-in-chrome__computer
+  - tool: mcp__claude-in-chrome__find
+  - tool: mcp__claude-in-chrome__read_page
+  - tool: mcp__claude-in-chrome__form_input
+  - tool: mcp__claude-in-chrome__get_page_text
 ---
 
 # Deep Research Across 10 AI Platforms

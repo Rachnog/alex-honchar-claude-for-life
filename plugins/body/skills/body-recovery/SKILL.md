@@ -1,6 +1,10 @@
 ---
 name: body-recovery
 description: Provide specialist recovery and training-readiness evidence when `body-data-qa` or `body-cadence-review` needs recovery-domain depth, or when the user explicitly asks for a recovery-only readiness deep dive.
+compatibility:
+  - tool: mcp__oura__get_daily_readiness
+  - tool: mcp__garmin-connect__get_health_metrics
+  - tool: mcp__garmin-connect__get_training_stress_balance
 ---
 
 # Body - Recovery
