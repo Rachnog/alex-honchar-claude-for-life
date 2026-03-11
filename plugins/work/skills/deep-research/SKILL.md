@@ -145,7 +145,7 @@ Research Status Update:
 
 - Always use `find` or `read_page` to locate elements rather than hard-coding coordinates. Platform UIs change frequently and coordinates will break.
 - Take screenshots before and after major actions to verify success.
-- When typing the query, be aware that some platforms may have character limits or may interpret certain characters specially. Type the query as-is.
+- When typing the query, be aware that some platforms may have character limits or may interpret certain characters specially. Type the query **exactly as provided by the user — character for character, including any unusual capitalisation, line breaks, bullet style, or apparent typos.** Do not normalise or improve the text.
 - If a platform shows a CAPTCHA or bot detection, inform the user immediately — they'll need to handle it manually.
 
 ## Lessons from Live Testing
