@@ -1,0 +1,24 @@
+{
+  "title": "Exercise Log",
+  "description": "Garmin-centered exercise and training behavior fields",
+  "type": "object",
+  "properties": {
+    "date": { "type": "string", "description": "YYYY-MM-DD" },
+    "sessions_count": { "type": "integer" },
+    "weekly_sessions_count": { "type": "integer" },
+    "weekly_target_sessions": { "type": "integer" },
+    "training_load_7d": { "type": "number" },
+    "training_status": { "type": "string" },
+    "steps_avg": { "type": "number" },
+    "consistency_score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "habit_adherence_pct": { "type": "number" },
+    "risk_flags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    }
+  }
+}

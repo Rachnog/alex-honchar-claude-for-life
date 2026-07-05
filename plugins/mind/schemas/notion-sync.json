@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Notion Sync Result",
+  "description": "Structured output for a Notion-Obsidian sync operation",
+  "type": "object",
+  "properties": {
+    "direction": {
+      "type": "string",
+      "enum": ["pull", "push"],
+      "description": "Sync direction: pull = Notion→Obsidian, push = Obsidian→Notion"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of the sync operation"
+    },
+    "projects": {
+      "type": "object",
+      "properties": {
+        "total": { "type": "integer" },
+        "created": { "type": "integer" },
+        "updated": { "type": "integer" },
+        "skipped": { "type": "integer" },
+        "failed": { "type": "integer" }
+      },
+      "required": ["total", "created", "updated", "skipped", "failed"]
+    },
+    "tasks": {
+      "type": "object",
+      "properties": {
+        "total": { "type": "integer" },
+        "created": { "type": "integer" },
+        "updated": { "type": "integer" },
+        "skipped": { "type": "integer" },
+        "failed": { "type": "integer" },
+        "orphan": { "type": "integer", "description": "Tasks with no project relation" }
+      },
+      "required": ["total", "created", "updated", "skipped", "failed", "orphan"]
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "notion_id": { "type": "string" },
+          "title": { "type": "string" },
+          "field": { "type": "string" },
+          "notion_value": { "type": "string" },
+          "obsidian_value": { "type": "string" }
+        }
+      },
+      "description": "Records that differ between Notion and Obsidian"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "notion_id": { "type": "string" },
+          "title": { "type": "string" },
+          "error": { "type": "string" }
+        }
+      }
+    },
+    "caveats": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Warnings about data quality, expired URLs, etc."
+    },
+    "confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    }
+  },
+  "required": ["direction", "timestamp", "projects", "tasks", "confidence"]
+}

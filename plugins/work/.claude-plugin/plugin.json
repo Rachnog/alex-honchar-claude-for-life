@@ -1,0 +1,16 @@
+{
+  "name": "work",
+  "description": "Work life-area plugin for the alex-life marketplace — token-optimized email, Slack, and messenger/DM triage with deterministic rules, Haiku sub-agents, GTD-style prioritization, Chrome auto-archive for email, API mark-as-read for Slack, browser-automated messenger triage across X/LinkedIn/Facebook/Instagram/WhatsApp/Telegram, Apple Notes triage with auto-clipping and Notion task creation, calendar analysis and week preparation with time allocation tracking against Zone of Genius targets, and multi-platform deep research",
+  "version": "2.6.2",
+  "author": { "name": "Oleksandr Honchar" },
+  "keywords": [
+    "work", "email", "slack", "messengers", "messengers-triage", "triage", "slack-triage",
+    "gtd", "getting-things-done", "calendar", "inbox", "classification", "life-area-plugin",
+    "alex-life-marketplace", "deep-research", "browser-automation",
+    "ai-research", "multi-platform", "dm", "twitter", "linkedin",
+    "whatsapp", "telegram", "instagram", "facebook-messenger",
+    "calendar-review", "time-allocation", "deep-work", "week-prep",
+    "apple-notes", "apple-notes-triage", "notes-triage", "clippings",
+    "rize", "time-tracking", "time-review", "cadence-review", "zone-of-genius", "meeting-load"
+  ]
+}

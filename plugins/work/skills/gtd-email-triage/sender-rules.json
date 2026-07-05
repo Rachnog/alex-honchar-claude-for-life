@@ -1,0 +1,18 @@
+{
+  "_comment": "Sender classification rules. This file ships with a few generic examples only — populate it iteratively from your own inbox during triage runs (the skill appends newly discovered automated senders). Keep your personalized copy local; avoid committing real senders, banks, or contacts to a public repo.",
+  "by_sender": {
+    "_comment": "Exact sender email match. Example format:",
+    "newsletter@example.com": { "action": "RELEVANT", "label": "newsletter" }
+  },
+  "by_domain": {
+    "_comment": "Sender domain match. Example format:",
+    "github.com": { "action": "ARCHIVE", "label": "dev-notifications" },
+    "noreply.github.com": { "action": "ARCHIVE", "label": "dev-notifications" },
+    "cold-spam-example.info": { "action": "SKIP", "label": "cold-spam" }
+  },
+  "by_name_contains": {
+    "_comment": "Case-insensitive substring match on sender display name. Example format:",
+    "LinkedIn": { "action": "ARCHIVE", "label": "social" },
+    "Booking.com": { "action": "ARCHIVE", "label": "travel" }
+  }
+}

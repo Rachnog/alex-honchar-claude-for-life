@@ -1,0 +1,37 @@
+{
+  "name": "mind",
+  "description": "Mind life-area plugin for habit reflection, Streaks export analysis, Notion-Obsidian project sync, markdown reporting, and cross-area weekly AND monthly reviews orchestrating all 8 life areas",
+  "version": "1.6.1",
+  "author": {
+    "name": "Oleksandr Honchar"
+  },
+  "keywords": [
+    "mind",
+    "streaks",
+    "habits",
+    "habit-review",
+    "shortcuts",
+    "personal-analytics",
+    "markdown-reporting",
+    "notion-sync",
+    "notion",
+    "obsidian",
+    "projects",
+    "tasks",
+    "weekly-review",
+    "monthly-review",
+    "cadence-review",
+    "rize",
+    "time-review",
+    "attention",
+    "screen-time",
+    "digital-minimalism",
+    "information-diet",
+    "focus",
+    "life-areas",
+    "integrated-life-planning",
+    "orchestration",
+    "life-area-plugin",
+    "alex-life-marketplace"
+  ]
+}

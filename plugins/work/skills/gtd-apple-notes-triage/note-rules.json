@@ -1,0 +1,183 @@
+{
+  "by_url_domain": {
+    "instagram.com": {
+      "platform": "Instagram",
+      "disposition": "CLIP",
+      "bulk_file": "Instagram Reels - Unsorted.md",
+      "filename_template": "{title} on Instagram.md",
+      "tags": ["clipping", "instagram"],
+      "notes": "Bulk append for untitled notes. Individual file if note has a real title."
+    },
+    "x.com": {
+      "platform": "X/Twitter",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "Thread by @{handle}.md",
+      "tags": ["clipping", "twitter"],
+      "notes": "Extract @handle from URL path: /handle/status/id"
+    },
+    "twitter.com": {
+      "platform": "X/Twitter",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "Thread by @{handle}.md",
+      "tags": ["clipping", "twitter"],
+      "notes": "Legacy domain, same handling as x.com"
+    },
+    "tiktok.com": {
+      "platform": "TikTok",
+      "disposition": "CLIP",
+      "bulk_file": "TikTok - Unsorted.md",
+      "filename_template": "{title} on TikTok.md",
+      "tags": ["clipping", "tiktok"],
+      "notes": "Bulk append for untitled notes."
+    },
+    "youtube.com": {
+      "platform": "YouTube",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "YouTube - {title}.md",
+      "tags": ["clipping", "youtube"],
+      "notes": "Individual files. Title from note title or video ID."
+    },
+    "youtu.be": {
+      "platform": "YouTube",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "YouTube - {title}.md",
+      "tags": ["clipping", "youtube"],
+      "notes": "Short URL variant."
+    },
+    "linkedin.com": {
+      "platform": "LinkedIn",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "LinkedIn - {title}.md",
+      "tags": ["clipping", "linkedin"],
+      "notes": "Posts, articles, profiles."
+    },
+    "chatgpt.com": {
+      "platform": "ChatGPT",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "ChatGPT Share - {id}.md",
+      "tags": ["clipping", "chatgpt"],
+      "notes": "Extract share ID from URL path."
+    },
+    "arxiv.org": {
+      "platform": "arXiv",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "arXiv - {id}.md",
+      "tags": ["clipping", "research", "arxiv"],
+      "notes": "Extract paper ID from URL."
+    },
+    "substack.com": {
+      "platform": "Substack",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "{title}.md",
+      "tags": ["clipping", "newsletter"],
+      "notes": "Newsletter articles."
+    },
+    "github.com": {
+      "platform": "GitHub",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "GitHub - {repo}.md",
+      "tags": ["clipping", "github"],
+      "notes": "Extract owner/repo from URL."
+    },
+    "medium.com": {
+      "platform": "Medium",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "{title}.md",
+      "tags": ["clipping", "medium"],
+      "notes": "Blog articles."
+    },
+    "reddit.com": {
+      "platform": "Reddit",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "Reddit - {title}.md",
+      "tags": ["clipping", "reddit"],
+      "notes": "Threads and comments."
+    },
+    "t.me": {
+      "platform": "Telegram",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "Telegram - {title}.md",
+      "tags": ["clipping", "telegram"],
+      "notes": "Telegram channel/group links."
+    },
+    "notion.so": {
+      "platform": "Notion",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "Notion - {title}.md",
+      "tags": ["clipping", "notion"],
+      "notes": "Shared Notion pages."
+    },
+    "claude.ai": {
+      "platform": "Claude",
+      "disposition": "CLIP",
+      "bulk_file": null,
+      "filename_template": "Claude Share - {id}.md",
+      "tags": ["clipping", "claude"],
+      "notes": "Claude conversation shares."
+    }
+  },
+  "by_title_pattern": {
+    "^New Note$": {
+      "action": "check_body",
+      "notes": "Untitled — classify by body content. Most common for quick iPhone shares."
+    },
+    "(?i)screenshot.*\\.png$": {
+      "action": "screenshot",
+      "notes": "Screenshot image file shared to Notes."
+    },
+    "(?i)^(todo|task|remind)": {
+      "action": "notion_task",
+      "priority": "Medium",
+      "task_type": "Average / Professional",
+      "notes": "Task/reminder captures."
+    },
+    "(?i)^(idea|concept|brainstorm)": {
+      "action": "notion_task",
+      "priority": "Low",
+      "task_type": "Creative / Technical",
+      "notes": "Idea captures."
+    },
+    "(?i)(course|notes|lecture|class)": {
+      "action": "obsidian_save",
+      "vault_path": "500 Archive/8 Work/",
+      "notes": "Educational material — archive in Work."
+    },
+    "(?i)(research|paper|study)": {
+      "action": "obsidian_save",
+      "vault_path": "400 Resources/",
+      "notes": "Research references."
+    },
+    "(?i)on Instagram": {
+      "action": "link_only",
+      "notes": "Instagram share with caption as title."
+    }
+  },
+  "content_thresholds": {
+    "link_only_max_text_chars": 100,
+    "screenshot_max_text_chars": 50,
+    "text_rich_min_text_chars": 200,
+    "title_only_max_body_chars": 50
+  },
+  "notion_defaults": {
+    "_comment": "Set data_source_id to your own Notion Tasks database data source ID.",
+    "data_source_id": "REPLACE-WITH-YOUR-NOTION-DATA-SOURCE-ID",
+    "status": "Backlog",
+    "priority": "Medium",
+    "task_type": "Average / Professional"
+  },
+  "clippings_path": "Clippings/",
+  "vault_root": "REPLACE-WITH-ABSOLUTE-PATH-TO-YOUR-VAULT/"
+}

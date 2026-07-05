@@ -1,0 +1,43 @@
+// app_in_focus_extended.proto
+syntax = "proto3";
+package biome.app_in_focus;
+
+message AppInFocusEvent {
+  // 1: e.g. "com.apple.SpringBoard.transitionReason.appswitcher"
+  string transition_reason = 1;
+
+  // 2: observed as 1 (maybe “event kind” or category)
+  uint32 kind = 2;
+
+  // 3: 1 = gained focus, 0 = lost focus
+  uint32 in_foreground = 3;
+
+  // 4: CFAbsoluteTime (double) seconds since 2001-01-01T00:00:00Z
+  double cf_absolute_time = 4;
+
+  // 5: (unknown/reserved) — include in schema if you see it later
+  // optional bytes unknown_5 = 5;
+
+  // 6: bundle identifier
+  string bundle_id = 6;
+
+  // 7–8: (unknown/reserved) maybe version/build metadata
+  // optional uint32 unknown_7 = 7;
+  // optional uint32 unknown_8 = 8;
+
+  // 9: marketing version (string)
+  string app_version = 9;
+
+  // 10: build number (string)
+  string app_build = 10;
+
+  // 11–12: (unknown/reserved)
+  // optional bytes unknown_11 = 11;
+  // optional bytes unknown_12 = 12;
+
+  // 13: platform/source flag (observed as 1)
+  uint32 platform_flag = 13;
+
+  // 14-? : (future/unknown fields) — you might capture more fields
+  // repeated UnknownField unknown_fields = 14;
+}

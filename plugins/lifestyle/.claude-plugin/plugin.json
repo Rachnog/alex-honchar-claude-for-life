@@ -1,0 +1,22 @@
+{
+  "name": "lifestyle",
+  "description": "Lifestyle life-area plugin \u2014 digital wellbeing and screen/phone balance, so you don't live chronically online. Analyzes unified Apple Screen Time (Mac + iPhone) for total device time, phone dominance, and presence.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Oleksandr Honchar"
+  },
+  "keywords": [
+    "lifestyle",
+    "digital-wellbeing",
+    "screen-time",
+    "phone-usage",
+    "screen-balance",
+    "digital-detox",
+    "presence",
+    "attention",
+    "offline",
+    "chronically-online",
+    "life-area-plugin",
+    "alex-life-marketplace"
+  ]
+}

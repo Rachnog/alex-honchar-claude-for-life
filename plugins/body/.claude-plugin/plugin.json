@@ -1,0 +1,131 @@
+{
+  "name": "body",
+  "description": "Body life-area plugin for ad-hoc body data Q&A and structured cadence reviews, powered by specialist sleep, recovery, composition, diet, exercise, and medical skills",
+  "version": "1.2.2",
+  "author": {
+    "name": "Oleksandr Honchar"
+  },
+  "keywords": [
+    "body",
+    "health",
+    "data-qa",
+    "cadence-review",
+    "weekly-review",
+    "monthly-review",
+    "quarterly-review",
+    "yearly-review",
+    "sleep",
+    "recovery",
+    "composition",
+    "diet",
+    "exercise",
+    "medical-checkups",
+    "life-area-plugin",
+    "alex-life-marketplace"
+  ],
+  "mcpServers": {
+    "oura": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "${HOME}/oura-mcp/build/index.js"
+      ],
+      "env": {
+        "OURA_PERSONAL_ACCESS_TOKEN": "${user_config.oura_personal_access_token}"
+      }
+    },
+    "withings": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "gchallen/withings-mcp"
+      ],
+      "env": {
+        "WITHINGS_CLIENT_ID": "${user_config.withings_client_id}",
+        "WITHINGS_CLIENT_SECRET": "${user_config.withings_client_secret}",
+        "WITHINGS_REDIRECT_URI": "${user_config.withings_redirect_uri}",
+        "WITHINGS_REFRESH_TOKEN": "${user_config.withings_refresh_token}"
+      }
+    },
+    "garmin-connect": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "garmin-connect-mcp@latest"
+      ],
+      "env": {
+        "GARMIN_USERNAME": "${user_config.garmin_username}",
+        "GARMIN_PASSWORD": "${user_config.garmin_password}"
+      }
+    },
+    "yazio": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "yazio-mcp"
+      ],
+      "env": {
+        "YAZIO_USERNAME": "${user_config.yazio_username}",
+        "YAZIO_PASSWORD": "${user_config.yazio_password}"
+      }
+    }
+  },
+  "userConfig": {
+    "oura_personal_access_token": {
+      "type": "string",
+      "title": "oura: OURA_PERSONAL_ACCESS_TOKEN",
+      "description": "OURA_PERSONAL_ACCESS_TOKEN for the oura MCP server",
+      "sensitive": true
+    },
+    "withings_client_id": {
+      "type": "string",
+      "title": "withings: WITHINGS_CLIENT_ID",
+      "description": "WITHINGS_CLIENT_ID for the withings MCP server",
+      "sensitive": false
+    },
+    "withings_client_secret": {
+      "type": "string",
+      "title": "withings: WITHINGS_CLIENT_SECRET",
+      "description": "WITHINGS_CLIENT_SECRET for the withings MCP server",
+      "sensitive": true
+    },
+    "withings_redirect_uri": {
+      "type": "string",
+      "title": "withings: WITHINGS_REDIRECT_URI",
+      "description": "WITHINGS_REDIRECT_URI for the withings MCP server",
+      "sensitive": false
+    },
+    "withings_refresh_token": {
+      "type": "string",
+      "title": "withings: WITHINGS_REFRESH_TOKEN",
+      "description": "WITHINGS_REFRESH_TOKEN for the withings MCP server",
+      "sensitive": true
+    },
+    "garmin_username": {
+      "type": "string",
+      "title": "garmin-connect: GARMIN_USERNAME",
+      "description": "GARMIN_USERNAME for the garmin-connect MCP server",
+      "sensitive": false
+    },
+    "garmin_password": {
+      "type": "string",
+      "title": "garmin-connect: GARMIN_PASSWORD",
+      "description": "GARMIN_PASSWORD for the garmin-connect MCP server",
+      "sensitive": true
+    },
+    "yazio_username": {
+      "type": "string",
+      "title": "yazio: YAZIO_USERNAME",
+      "description": "YAZIO_USERNAME for the yazio MCP server",
+      "sensitive": false
+    },
+    "yazio_password": {
+      "type": "string",
+      "title": "yazio: YAZIO_PASSWORD",
+      "description": "YAZIO_PASSWORD for the yazio MCP server",
+      "sensitive": true
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "_comment": "Channel classification rules. The prefixes and exact channel names below are GENERIC EXAMPLES — replace them with your workspace's real naming scheme in a PRIVATE local copy. Do not commit your real channel taxonomy to a public repo: it hands social engineers your internal vocabulary and shows exactly which channels are auto-ignored vs escalated.",
+  "by_channel_prefix": {
+    "client-": {
+      "default_action": "RELEVANT",
+      "escalation_action": "ACTIONABLE_URGENT",
+      "label": "client-account",
+      "notes": "Example: client account channels. Default relevant, escalation keywords upgrade to urgent."
+    },
+    "project-": {
+      "default_action": "RELEVANT",
+      "escalation_action": "ACTIONABLE_URGENT",
+      "label": "delivery",
+      "notes": "Example: delivery/project channels. Blockers need attention even if the user doesn't manage daily delivery."
+    },
+    "partner-": {
+      "default_action": "RELEVANT",
+      "escalation_action": "ACTIONABLE_URGENT",
+      "label": "partner-external",
+      "notes": "Example: external partner channels. Client-facing — treat like client channels."
+    },
+    "internal-": {
+      "default_action": "RELEVANT",
+      "escalation_action": "ACTIONABLE_DEFERRED",
+      "label": "operations",
+      "notes": "Example: internal ops channels. Relevant for awareness, escalations are deferred not urgent."
+    }
+  },
+  "by_channel_exact": {
+    "general": {
+      "action": "RELEVANT",
+      "label": "company-wide",
+      "notes": "Company announcements. Relevant for leadership awareness."
+    },
+    "random": {
+      "action": "SPAM",
+      "label": "social",
+      "notes": "Random/fun channel. Auto-mark-as-read."
+    }
+  },
+  "by_bot": {
+    "Leapsome": {
+      "action": "SPAM",
+      "label": "hr-noise",
+      "notes": "Learning path reminders, survey prompts, goal digests."
+    },
+    "BirthdayBot": {
+      "action": "SPAM",
+      "label": "social-bot",
+      "notes": "Birthday celebrations."
+    },
+    "GreetBot": {
+      "action": "SPAM",
+      "label": "social-bot",
+      "notes": "New member greetings."
+    },
+    "ProjectX_Daily": {
+      "action": "SPAM",
+      "label": "standup-bot",
+      "notes": "Example: standup prompts for a delivery team the user is not on. Replace with your own project standup bots."
+    },
+    "HubSpot": {
+      "action": "RELEVANT",
+      "label": "crm-ops",
+      "notes": "Deal notifications, closed-won alerts. Relevant for sales pipeline awareness."
+    },
+    "Bonusly": {
+      "action": "RELEVANT",
+      "label": "recognition",
+      "notes": "Team recognition. Nice to know for leadership."
+    },
+    "Polly": {
+      "action": "SPAM",
+      "label": "survey-bot",
+      "notes": "Polls and surveys."
+    },
+    "Giphy": {
+      "action": "SPAM",
+      "label": "social-bot",
+      "notes": "GIF posts."
+    },
+    "Standup Bot": {
+      "action": "SPAM",
+      "label": "standup-bot",
+      "notes": "Generic standup bot prompts."
+    },
+    "Google Calendar": {
+      "action": "SPAM",
+      "label": "calendar-noise",
+      "notes": "Calendar reminders — already tracked in Google Calendar."
+    },
+    "Productive": {
+      "action": "SPAM",
+      "label": "tool-noise",
+      "notes": "Time tracking reminders, task notifications."
+    },
+    "Ashby": {
+      "action": "RELEVANT",
+      "label": "hiring",
+      "notes": "Hiring pipeline updates. Relevant for leadership."
+    }
+  },
+  "by_user": {
+    "_comment": "Add specific user display names or IDs here for people whose messages always need attention. Format: 'Display Name': { action, label, notes }. Starts empty — populate iteratively based on triage feedback, in your PRIVATE local copy only. Never cache human users without explicit instruction."
+  }
+}

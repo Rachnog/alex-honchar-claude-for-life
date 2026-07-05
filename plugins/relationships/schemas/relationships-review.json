@@ -1,0 +1,174 @@
+{
+  "title": "Relationships Review",
+  "description": "Structured output for a single weekly, monthly, or quarterly relationships review. Two lenses share this schema: personal (skill relationships-personal-review — partner + family/close friends, from WhatsApp/calls/Telegram/iMessage metadata) and network (skill relationships-network-review — professional network + community, from Clay/Calendar/Granola). If multiple cadences are requested together, emit one object per cadence.",
+  "type": "object",
+  "properties": {
+    "lens": {
+      "type": "string",
+      "enum": ["personal", "network"],
+      "description": "Which review lens produced this object."
+    },
+    "review_period": {
+      "type": "string",
+      "enum": ["weekly", "monthly", "quarterly"],
+      "description": "Cadence of the active review."
+    },
+    "review_window": {
+      "type": "object",
+      "properties": {
+        "start_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "end_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "comparison_label": { "type": "string", "description": "Human label, e.g. 'this month' or 'March-June trend'" }
+      },
+      "required": ["start_date", "end_date", "comparison_label"]
+    },
+    "comparison_window": {
+      "type": "object",
+      "properties": {
+        "start_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "end_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "comparison_type": {
+          "type": "string",
+          "enum": ["previous-equivalent-period", "trend-baseline", "custom", "none"]
+        }
+      },
+      "required": ["comparison_type"]
+    },
+    "source_notes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Data-provenance caveats, e.g. 'Clay blind to WhatsApp/calls/Telegram — used for roster only', 'partner contact mostly offline, Calendar is the partner signal', 'Telegram MCP not loaded so Telegram unmeasured', 'metadata only, no message content'."
+    },
+    "totals": {
+      "type": "object",
+      "properties": {
+        "people_touched": { "type": "number", "description": "Distinct people interacted with in the window (in-scope for the lens)." },
+        "interactions_total": { "type": "number" },
+        "dormant_count": { "type": "number", "description": "In-scope people with zero contact in the window." },
+        "channels_covered": { "type": "array", "items": { "type": "string" }, "description": "e.g. ['whatsapp','call','telegram'] for personal; ['clay','calendar','granola'] for network." }
+      },
+      "required": ["people_touched"]
+    },
+    "buckets": {
+      "type": "array",
+      "description": "Relationship buckets. Personal lens: Partner, Family-near, Family-extended, Close friends. Network lens: target-active, target-dormant, new-connections, follow-ups-owed, community.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "people_count": { "type": "number" },
+          "interactions": { "type": "number", "description": "Total interactions in the window for this bucket (calls counted with minutes noted separately)." },
+          "reciprocity": { "type": "number", "description": "sent / (sent+received) across the bucket; ~0.5 balanced. Omit/0 where not applicable (e.g. network)." },
+          "trend": { "type": "string", "enum": ["up", "flat", "down", "n/a"] },
+          "is_signal": { "type": "boolean", "description": "True if this bucket is the focus of the active lens (e.g. dormant family for personal; follow-ups-owed for network)." },
+          "observation": { "type": "string" }
+        },
+        "required": ["name", "observation"]
+      }
+    },
+    "key_people": {
+      "type": "array",
+      "description": "Named individuals worth surfacing — the dormant, the slipping, the reconnections. First name only.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "person": { "type": "string" },
+          "bucket": { "type": "string" },
+          "last_contact": { "type": "string", "description": "YYYY-MM-DD of most recent real contact (from the truthful channel)." },
+          "days_since": { "type": "number" },
+          "channel": { "type": "string" },
+          "status": { "type": "string", "enum": ["active", "cooling", "dormant", "reconnected"] },
+          "note": { "type": "string" }
+        },
+        "required": ["person", "status"]
+      }
+    },
+    "key_metrics": {
+      "type": "array",
+      "description": "Headline derived metrics, each ideally with a target. Personal lens: inner-circle breadth, dormant count, partner date-nights, longest-dormant days. Network lens: non-work activities with target network (target 25), follow-ups owed, new connections, dormant-important count.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "metric": { "type": "string" },
+          "value": { "type": "string" },
+          "target": { "type": "string" },
+          "status": { "type": "string", "enum": ["ahead", "on-track", "at-risk", "off-track", "unknown"] },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+        },
+        "required": ["metric", "value", "status"]
+      }
+    },
+    "clay_reconciliation": {
+      "type": "array",
+      "description": "Personal lens honesty anchor: for a few inner-circle people, Clay's stale last-interaction vs the real last-contact from local/Telegram. Empty for the network lens.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "person": { "type": "string" },
+          "clay_last_interaction": { "type": "string" },
+          "actual_last_contact": { "type": "string" },
+          "actual_channel": { "type": "string" },
+          "note": { "type": "string" }
+        },
+        "required": ["person", "clay_last_interaction", "actual_last_contact"]
+      }
+    },
+    "cross_cutting_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "finding": { "type": "string" },
+          "evidence": { "type": "string" },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+        },
+        "required": ["finding", "evidence", "confidence"]
+      }
+    },
+    "alignment": {
+      "type": "object",
+      "properties": {
+        "goals": { "type": "array", "items": { "type": "object", "properties": { "goal": {"type":"string"}, "status": {"type":"string","enum":["ahead","on-track","at-risk","off-track","unknown"]}, "evidence": {"type":"string"} }, "required": ["goal","status","evidence"] } },
+        "systems": { "type": "array", "items": { "type": "object", "properties": { "system": {"type":"string"}, "status": {"type":"string","enum":["on-track","mixed","off-track","unknown"]}, "comment": {"type":"string"} }, "required": ["system","status","comment"] } },
+        "principles": { "type": "array", "items": { "type": "object", "properties": { "principle": {"type":"string"}, "status": {"type":"string","enum":["supported","mixed","unsupported","unknown"]}, "comment": {"type":"string"} }, "required": ["principle","status","comment"] } }
+      }
+    },
+    "key_changes": { "type": "array", "items": { "type": "string" } },
+    "top_priorities": { "type": "array", "items": { "type": "string" } },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "recommendation": { "type": "string" },
+          "reason": { "type": "string" },
+          "linked_goal_or_principle": { "type": "string" },
+          "priority": { "type": "string", "enum": ["high", "medium", "low"] }
+        },
+        "required": ["recommendation", "reason", "linked_goal_or_principle", "priority"]
+      }
+    },
+    "risks": { "type": "array", "items": { "type": "string" } },
+    "followups": { "type": "array", "items": { "type": "string" } },
+    "caveats": { "type": "array", "items": { "type": "string" } },
+    "overall_confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+  },
+  "required": [
+    "lens",
+    "review_period",
+    "review_window",
+    "comparison_window",
+    "source_notes",
+    "totals",
+    "buckets",
+    "key_metrics",
+    "cross_cutting_findings",
+    "alignment",
+    "key_changes",
+    "top_priorities",
+    "recommendations",
+    "risks",
+    "caveats",
+    "overall_confidence"
+  ]
+}

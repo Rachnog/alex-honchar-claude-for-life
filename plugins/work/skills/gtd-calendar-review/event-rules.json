@@ -1,0 +1,79 @@
+{
+  "_comment": "Event categorization rules. Ships with generic examples only — replace client placeholders (acme, globex) with your real clients in a private local copy. Do not commit real client names or attendee domains to a public repo.",
+  "by_calendar": {
+    "_comment": "Match by calendar name or ID. Use calendar_list to discover names.",
+    "Gym": { "category": "GYM" },
+    "Personal": { "category": "PERSONAL" }
+  },
+  "by_title_exact": {
+    "_comment": "Exact title match for recurring meetings with stable names. Examples:",
+    "[c-suite] Weekly Sync": { "category": "INTERNAL_SYNC", "label": "c-suite" },
+    "Deep Work - No Meetings Day": { "category": "DEEP_WORK_BLOCK", "label": "dw-day" }
+  },
+  "by_title_pattern": [
+    {
+      "regex": "(?i)^1:1|one.on.one|1-on-1|\\b1:1\\b",
+      "category": "INTERNAL_1ON1",
+      "label": "one-on-one"
+    },
+    {
+      "regex": "(?i)interview|qualification.*interview|screening",
+      "category": "INTERVIEW",
+      "label": "hiring"
+    },
+    {
+      "regex": "(?i)deep.?work|focus.?block|no.?meetings",
+      "category": "DEEP_WORK_BLOCK",
+      "label": "focus-time"
+    },
+    {
+      "regex": "(?i)gym|workout|training|strength|cycling|sauna",
+      "category": "GYM",
+      "label": "exercise"
+    },
+    {
+      "regex": "(?i)acme",
+      "category": "CLIENT_EXTERNAL",
+      "label": "client-acme",
+      "_comment": "Example client pattern — add one entry per real client in your private copy."
+    },
+    {
+      "regex": "(?i)investor|fund meeting|fundrais",
+      "category": "SALES_BD",
+      "label": "fund-investor"
+    },
+    {
+      "regex": "(?i)\\[delivery\\]|\\[operations\\]",
+      "category": "INTERNAL_SYNC",
+      "label": "ops-tag"
+    },
+    {
+      "regex": "(?i)hospital|doctor|dentist|medical|clinic",
+      "category": "PERSONAL",
+      "label": "medical"
+    },
+    {
+      "regex": "(?i)lunch|dinner|coffee with|drinks with",
+      "category": "PERSONAL",
+      "label": "social-meal",
+      "notes": "May need reclassification if business lunch"
+    }
+  ],
+  "by_attendee_domain": {
+    "_comment": "Match by attendee email domain. 'role' field used with heuristics: all-internal = INTERNAL, any client = CLIENT_EXTERNAL. Replace examples with your own company and client domains in a private copy.",
+    "your-company.com": { "role": "internal" },
+    "acme.com": { "role": "client", "label": "client-acme" },
+    "globex.com": { "role": "client", "label": "client-globex" }
+  },
+  "category_taxonomy": [
+    "CLIENT_EXTERNAL",
+    "INTERNAL_SYNC",
+    "INTERNAL_1ON1",
+    "INTERVIEW",
+    "SALES_BD",
+    "DEEP_WORK_BLOCK",
+    "GYM",
+    "PERSONAL",
+    "OTHER"
+  ]
+}

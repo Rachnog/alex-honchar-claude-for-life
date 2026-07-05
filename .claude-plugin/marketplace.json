@@ -1,0 +1,47 @@
+{
+  "name": "alex-life-marketplace",
+  "owner": {
+    "name": "Oleksandr Honchar"
+  },
+  "metadata": {
+    "description": "Personal multi-area plugin marketplace for Claude Code, shipping body, work, mind, lifestyle, and relationships domain capabilities",
+    "version": "2.15.1"
+  },
+  "plugins": [
+    {
+      "name": "body",
+      "description": "Workflow-first body plugin for ad-hoc body data Q&A and structured cadence reviews, backed by specialist domain skills",
+      "version": "1.2.2",
+      "source": "./plugins/body",
+      "strict": true
+    },
+    {
+      "name": "work",
+      "description": "Work management \u2014 email and Slack triage, GTD workflows, productivity automation, and Rize-powered work-time cadence reviews",
+      "version": "2.6.2",
+      "source": "./plugins/work",
+      "strict": true
+    },
+    {
+      "name": "mind",
+      "description": "Habit reflection, Streaks export analysis, bidirectional Notion-Obsidian project/task sync, cross-area weekly AND monthly reviews orchestrating all 8 life areas, and Rize-powered attention/information-diet time reviews",
+      "version": "1.6.1",
+      "source": "./plugins/mind",
+      "strict": true
+    },
+    {
+      "name": "lifestyle",
+      "description": "Digital wellbeing \u2014 screen/phone balance from unified Apple Screen Time, so you don't live chronically online",
+      "version": "1.0.0",
+      "source": "./plugins/lifestyle",
+      "strict": true
+    },
+    {
+      "name": "relationships",
+      "description": "Two-lens relationship reviews \u2014 a personal lens (partner + family/close friends) from local WhatsApp/call/iMessage metadata plus the Telegram MCP, and a network lens (professional network + community) from Clay/Mesh, Calendar, and Granola",
+      "version": "1.0.2",
+      "source": "./plugins/relationships",
+      "strict": true
+    }
+  ]
+}

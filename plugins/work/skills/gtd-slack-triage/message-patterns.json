@@ -1,0 +1,126 @@
+{
+  "keep_patterns": [
+    {
+      "regex": "(?i)blocker|blocked|blocking|stuck|cannot proceed|can't proceed|can not proceed",
+      "action": "ACTIONABLE_URGENT",
+      "reason": "delivery blocker keyword"
+    },
+    {
+      "regex": "(?i)escalat(e|ed|ing|ion)|urgent|asap|emergency|critical issue|outage|service down|incident",
+      "action": "ACTIONABLE_URGENT",
+      "reason": "escalation keyword"
+    },
+    {
+      "regex": "(?i)production (issue|bug|error|crash|failure|problem)|deploy(ment)? fail|prod is (down|broken)",
+      "action": "ACTIONABLE_URGENT",
+      "reason": "production incident"
+    },
+    {
+      "regex": "(?i)client (is |wants to |asked to |request|complain|unhappy|cancel|churn|threaten|escala)",
+      "action": "ACTIONABLE_URGENT",
+      "reason": "client escalation pattern"
+    },
+    {
+      "regex": "(?i)security (breach|leak|incident|vulnerability|alert)|credential(s)? (leak|expos)",
+      "action": "ACTIONABLE_URGENT",
+      "reason": "security incident"
+    },
+    {
+      "regex": "(?i)can you|could you|please review|need your (input|approval|sign|feedback|help)|your thoughts|waiting (on|for) you",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "direct request pattern"
+    },
+    {
+      "regex": "(?i)invoice|payment|billing|contract sign|SOW|statement of work|purchase order",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "financial/legal action needed"
+    },
+    {
+      "regex": "(?i)new (deal|lead|opportunity|partnership|client|prospect)|closed.won|deal won",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "new business opportunity"
+    },
+    {
+      "regex": "(?i)hiring (decision|approval|offer)|candidate (accept|reject|offer)|headcount",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "hiring decision needed"
+    },
+    {
+      "regex": "(?i)(lose|losing) (him|her|them|candidate)|accept another offer|competing offer|notice period|reference check|offer asap|send (the |an )?offer",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "hiring urgency/risk — candidate at risk of being lost to competitor or blocker on offer pipeline"
+    },
+    {
+      "regex": "(?i)PHR|project health|sprint report|delivery report",
+      "channel_prefix": "client-",
+      "action": "RELEVANT",
+      "reason": "project health report in client channel — FYI for CEO"
+    }
+  ],
+  "skip_patterns": [
+    {
+      "regex": "(?i)daily standup|standup update|what did you accomplish|what are you working on|any blockers\\?$|share your updates for today",
+      "action": "SPAM",
+      "reason": "standup prompt — Alex doesn't manage daily delivery"
+    },
+    {
+      "regex": "(?i)learning path|complete your (survey|review|feedback|assessment)|reminder to submit|take the next step on your",
+      "bot_name": "Leapsome",
+      "action": "SPAM",
+      "reason": "Leapsome automated noise"
+    },
+    {
+      "regex": "(?i)happy birthday|birthday today|wish .* a happy birthday|birthday celebration",
+      "action": "SPAM",
+      "reason": "birthday bot noise"
+    },
+    {
+      "regex": "(?i)has joined the channel|has left the channel|set the channel (topic|purpose|description)",
+      "action": "SPAM",
+      "reason": "channel activity system message"
+    },
+    {
+      "regex": "(?i)welcome to the team|say hello to|just joined|first recognition",
+      "bot_name": "GreetBot",
+      "action": "SPAM",
+      "reason": "new member greeting noise"
+    },
+    {
+      "regex": "(?i)welcome to the team|This is your first recognition|Heres \\d+ because",
+      "bot_name": "Bonusly",
+      "action": "SPAM",
+      "reason": "Bonusly new member welcome — different from actual recognition"
+    },
+    {
+      "regex": "(?i)Time reminder|Timesheet submission|time review|log your time|time entry|don't forget to log",
+      "action": "SPAM",
+      "reason": "time tracking reminder noise"
+    },
+    {
+      "regex": "(?i)Please remove the workflow|rename channel to the accoun",
+      "bot_name": "HubSpot",
+      "action": "SPAM",
+      "reason": "HubSpot automated channel management — handled by ops team"
+    },
+    {
+      "regex": "(?i)(i'?m |i am )(booking|scheduling|arranging|setting up|preparing|organizing).{0,80}(for @?alex|for you|call w|meeting w|interview w)",
+      "action": "SPAM",
+      "reason": "someone-acting-for-alex — another person is handling this on Alex's behalf, no ask, informational only, mark as read"
+    },
+    {
+      "regex": "(?i)^(thanks?[!.\\s]*$|thank you[!.\\s]*$|appreciate it[!.\\s]*$|many thanks[!.\\s]*$)",
+      "action": "SPAM",
+      "reason": "dm-acknowledgment — standalone short thank-you, no action needed, safe to mark as read"
+    },
+    {
+      "regex": "(?i)^(@\\w+\\s+)?(i |i'd )?(agree[sd]?|agreed|sounds good|looks good|makes sense|\\+1|👍|lgtm|yes[,!.]?\\s*$|yep[,!.]?\\s*$|ok[,!.]?\\s*$|sure[,!.]?\\s*$)[!.\\s]*$",
+      "action": "SPAM",
+      "reason": "thread-agreement — reply is pure sign-off/agreement with no new question or ask; thread resolved, mark as read"
+    },
+    {
+      "regex": "(?i)^thank.{0,250}(appreciate|grateful|kind of you|really helpful|great detail)[^?]*$",
+      "action": "SPAM",
+      "reason": "dm-acknowledgment — thank-you with gratitude, no question, no action needed, safe to mark as read"
+    }
+  ]
+}

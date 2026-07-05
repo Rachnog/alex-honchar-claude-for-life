@@ -1,0 +1,88 @@
+{
+  "platform_defaults": {
+    "x": {
+      "unknown_sender_action": "RELEVANT",
+      "label": "twitter-dm",
+      "notes": "X DMs from unknowns may be professional outreach (AI/tech community). Default RELEVANT."
+    },
+    "linkedin": {
+      "unknown_sender_action": "RELEVANT",
+      "label": "linkedin-dm",
+      "notes": "LinkedIn DMs from unknowns are common professional outreach. Default RELEVANT but high noise ratio."
+    },
+    "facebook": {
+      "unknown_sender_action": "SPAM",
+      "label": "facebook-dm",
+      "notes": "Facebook DMs from unknowns are rarely professional. Default SPAM."
+    },
+    "instagram": {
+      "unknown_sender_action": "SPAM",
+      "label": "instagram-dm",
+      "notes": "Instagram DMs from unknowns are rarely professional. Default SPAM."
+    },
+    "whatsapp": {
+      "unknown_sender_action": "RELEVANT",
+      "label": "whatsapp-dm",
+      "notes": "WhatsApp contacts have your phone number — almost certainly real. Default RELEVANT."
+    },
+    "telegram": {
+      "unknown_sender_action": "RELEVANT",
+      "label": "telegram-dm",
+      "notes": "Telegram DMs from unknowns may be tech/AI community. Default RELEVANT."
+    }
+  },
+  "by_platform_sender": {
+    "linkedin": {
+      "LinkedIn Talent Solutions": { "action": "SPAM", "label": "linkedin-system", "notes": "Automated LinkedIn recruitment product notifications." },
+      "LinkedIn News": { "action": "SPAM", "label": "linkedin-system", "notes": "LinkedIn editorial content." },
+      "LinkedIn": { "action": "SPAM", "label": "linkedin-system", "notes": "Generic LinkedIn system messages." },
+      "LinkedIn Job Alerts": { "action": "SPAM", "label": "linkedin-system", "notes": "Automated job matching notifications." },
+      "LinkedIn Offer": { "action": "SPAM", "label": "linkedin-system", "notes": "LinkedIn premium upsell." }
+    },
+    "telegram": {
+      "Telegram": { "action": "SPAM", "label": "system-notification", "notes": "Telegram system messages." },
+      "Telegram Notifications": { "action": "SPAM", "label": "system-notification", "notes": "Telegram push notification service." },
+      "Spam Info Bot": { "action": "SPAM", "label": "system-bot", "notes": "Telegram spam reporting bot." }
+    },
+    "instagram": {
+      "Instagram": { "action": "SPAM", "label": "system-notification", "notes": "Instagram system messages." }
+    },
+    "facebook": {
+      "Facebook": { "action": "SPAM", "label": "system-notification", "notes": "Facebook system messages." },
+      "Meta AI": { "action": "SPAM", "label": "system-bot", "notes": "Meta AI assistant — not a real conversation." }
+    },
+    "whatsapp": {
+      "WhatsApp": { "action": "SPAM", "label": "system-notification", "notes": "WhatsApp system messages." }
+    },
+    "x": {
+      "X": { "action": "SPAM", "label": "system-notification", "notes": "X platform system messages." },
+      "X Notification": { "action": "SPAM", "label": "system-notification", "notes": "X notification service." }
+    }
+  },
+  "by_sender_type": {
+    "_comment": "Cross-platform sender type patterns. Applied after platform-specific sender rules. Matched against sender title/bio/preview text.",
+    "recruiter_keywords": {
+      "patterns": ["(?i)recruiter", "(?i)talent acquisition", "(?i)hiring manager", "(?i)headhunter", "(?i)talent sourcer"],
+      "action": "SPAM",
+      "label": "recruiter",
+      "notes": "Recruiter outreach across any platform."
+    },
+    "sales_keywords": {
+      "patterns": ["(?i)account executive", "(?i)business development rep", "(?i)sales representative", "(?i)\\bSDR\\b", "(?i)sales manager"],
+      "action": "SPAM",
+      "label": "sales-outreach",
+      "notes": "Sales/BD cold outreach across any platform."
+    }
+  },
+  "by_sender_name_contains": {
+    "_comment": "Cross-platform sender name substring matches. Case-insensitive. WARNING: display names are trivially spoofable — anyone can put your company's name in their handle to jump the triage queue. Never auto-trust on name alone; treat matches as a hint, verify identity (mutual contacts, official domain, known account) before acting on the message. Populate with your own company name in a PRIVATE local copy.",
+    "Your Company": { "action": "ACTIONABLE_DEFERRED", "label": "team", "notes": "Example: likely team member or associate — still verify, display names are spoofable." }
+  },
+  "telegram_group_rules": {
+    "_comment": "Telegram-specific: classify groups/channels that appear in the unread list. These are NOT DMs — reported separately as FYI.",
+    "default_action": "FYI",
+    "known_groups": {
+      "_comment": "Add specific group names here with action overrides. Format: 'Group Name': { action, label, notes }. Starts empty — populate iteratively."
+    }
+  }
+}

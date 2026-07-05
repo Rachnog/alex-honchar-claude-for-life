@@ -1,0 +1,51 @@
+{
+  "_meta": {
+    "description": "Quantitative targets for calendar review analysis. Example values — tune every number to your own goals and measured baselines.",
+    "timezone": "Europe/Madrid",
+    "last_updated": "2026-03-29"
+  },
+  "zone_of_genius": {
+    "metric": "percentage of productive time in creative + scalable work",
+    "current_baseline": 0.15,
+    "target": 0.50,
+    "proxy_categories": ["DEEP_WORK_BLOCK"],
+    "notes": "Deep work blocks are the calendar proxy for ZoG. Actual ZoG also needs time-tracker data — this tracks the calendar-protected portion only. Baseline here is an example value."
+  },
+  "meeting_load": {
+    "metric": "percentage of weekday scheduled time that is meetings",
+    "meeting_categories": ["CLIENT_EXTERNAL", "INTERNAL_SYNC", "INTERNAL_1ON1", "INTERVIEW", "SALES_BD", "OTHER"],
+    "current_baseline": 0.40,
+    "warning_threshold": 0.35,
+    "critical_threshold": 0.45,
+    "denominator": "8h per weekday in range"
+  },
+  "deep_work_day": {
+    "day_of_week": "Thursday",
+    "day_index": 3,
+    "max_meetings": 0,
+    "severity": {
+      "pass": { "max_meetings": 0, "label": "PROTECTED" },
+      "warning": { "max_meetings": 2, "label": "AT RISK" },
+      "violation": { "min_meetings": 3, "label": "VIOLATED" }
+    }
+  },
+  "evening_cutoff": {
+    "time": "21:00",
+    "timezone": "Europe/Madrid",
+    "applies_to": "all_days",
+    "notes": "No work events should end after 9pm. Affects deep sleep quality."
+  },
+  "daily_meeting_cap": {
+    "max_hours": 5,
+    "applies_to_categories": ["CLIENT_EXTERNAL", "INTERNAL_SYNC", "INTERNAL_1ON1", "INTERVIEW", "SALES_BD", "OTHER"]
+  },
+  "focus_gap_minimum": {
+    "min_gap_minutes": 120,
+    "notes": "Gaps under 2h are too short for deep work. For single-day mode, also report gaps >30min."
+  },
+  "weekend_work": {
+    "policy": "minimize",
+    "allowed_categories": ["GYM", "PERSONAL"],
+    "notes": "Weekend meetings that are not gym or personal should be flagged."
+  }
+}

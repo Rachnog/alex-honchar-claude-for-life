@@ -1,0 +1,31 @@
+{
+  "name": "relationships",
+  "description": "Relationships life-area plugin: two-lens relationship reviews — a personal lens (partner + family/close friends) from local WhatsApp/call/iMessage metadata plus the Telegram MCP, and a network lens (professional network + community) from Clay/Mesh, Calendar, and Granola. Fills the CRM's inner-circle blind spot with a metadata-only local extractor.",
+  "version": "1.0.2",
+  "author": {
+    "name": "Oleksandr Honchar"
+  },
+  "keywords": [
+    "relationships",
+    "relationship-review",
+    "personal-crm",
+    "clay",
+    "mesh",
+    "network",
+    "networking",
+    "family",
+    "inner-circle",
+    "connection",
+    "whatsapp",
+    "telegram",
+    "imessage",
+    "call-history",
+    "granola",
+    "weekly-review",
+    "monthly-review",
+    "cadence-review",
+    "life-areas",
+    "life-area-plugin",
+    "alex-life-marketplace"
+  ]
+}

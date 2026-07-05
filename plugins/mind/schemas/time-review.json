@@ -1,0 +1,150 @@
+{
+  "title": "Digital Time Review",
+  "description": "Structured output for a single weekly, monthly, or quarterly digital-time review built from Rize automatic time tracking. Two lenses share this schema: work-productivity (skill work-cadence-review) and mind-attention (skill mind-time-review). If multiple cadences are requested together, emit one object per cadence.",
+  "type": "object",
+  "properties": {
+    "lens": {
+      "type": "string",
+      "enum": ["work-productivity", "mind-attention"],
+      "description": "Which review lens produced this object."
+    },
+    "review_period": {
+      "type": "string",
+      "enum": ["weekly", "monthly", "quarterly"],
+      "description": "Cadence of the active review."
+    },
+    "review_window": {
+      "type": "object",
+      "properties": {
+        "start_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "end_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "comparison_label": { "type": "string", "description": "Human label, e.g. 'this month' or 'March-June trend'" }
+      },
+      "required": ["start_date", "end_date", "comparison_label"]
+    },
+    "comparison_window": {
+      "type": "object",
+      "properties": {
+        "start_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "end_date": { "type": "string", "description": "YYYY-MM-DD" },
+        "comparison_type": {
+          "type": "string",
+          "enum": ["previous-equivalent-period", "trend-baseline", "custom", "none"]
+        }
+      },
+      "required": ["comparison_type"]
+    },
+    "source_notes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Data-provenance caveats, e.g. 'Rize desktop only, phone not captured', 'labels 100% unassigned Mar-May so buckets rebuilt from apps_used'."
+    },
+    "totals": {
+      "type": "object",
+      "properties": {
+        "tracked_hours": { "type": "number" },
+        "tracked_days": { "type": "number" },
+        "avg_hours_per_day": { "type": "number" },
+        "entry_count": { "type": "number", "description": "Rize entry_count for the window; used as the fragmentation proxy." }
+      },
+      "required": ["tracked_hours"]
+    },
+    "buckets": {
+      "type": "array",
+      "description": "Rebuilt time buckets from list_my_apps_used, NOT from Rize labels.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "hours": { "type": "number" },
+          "pct_of_tracked": { "type": "number" },
+          "trend": { "type": "string", "enum": ["up", "flat", "down", "n/a"] },
+          "is_signal": { "type": "boolean", "description": "True if this bucket is a focus of the active lens (e.g. deep-work for work lens; social/entertainment for mind lens)." },
+          "observation": { "type": "string" }
+        },
+        "required": ["name", "hours", "pct_of_tracked", "observation"]
+      }
+    },
+    "key_metrics": {
+      "type": "array",
+      "description": "Headline derived metrics, each ideally with a target. Work lens: Zone of Genius %, meeting %, comms %, side-project hours. Mind lens: attention-leak %, focus ratio (rebuilt), long-vs-short-form, screen-time.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "metric": { "type": "string" },
+          "value": { "type": "string" },
+          "target": { "type": "string" },
+          "status": { "type": "string", "enum": ["ahead", "on-track", "at-risk", "off-track", "unknown"] },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+        },
+        "required": ["metric", "value", "status"]
+      }
+    },
+    "score_reconciliation": {
+      "type": "object",
+      "description": "The credibility anchor: Rize's is_focus% vs the rebuilt deep-work/focus%, and why they differ.",
+      "properties": {
+        "rize_is_focus_pct": { "type": "number" },
+        "rebuilt_focus_pct": { "type": "number" },
+        "explanation": { "type": "string" }
+      }
+    },
+    "cross_cutting_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "finding": { "type": "string" },
+          "evidence": { "type": "string" },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+        },
+        "required": ["finding", "evidence", "confidence"]
+      }
+    },
+    "alignment": {
+      "type": "object",
+      "properties": {
+        "goals": { "type": "array", "items": { "type": "object", "properties": { "goal": {"type":"string"}, "status": {"type":"string","enum":["ahead","on-track","at-risk","off-track","unknown"]}, "evidence": {"type":"string"} }, "required": ["goal","status","evidence"] } },
+        "systems": { "type": "array", "items": { "type": "object", "properties": { "system": {"type":"string"}, "status": {"type":"string","enum":["on-track","mixed","off-track","unknown"]}, "comment": {"type":"string"} }, "required": ["system","status","comment"] } },
+        "principles": { "type": "array", "items": { "type": "object", "properties": { "principle": {"type":"string"}, "status": {"type":"string","enum":["supported","mixed","unsupported","unknown"]}, "comment": {"type":"string"} }, "required": ["principle","status","comment"] } }
+      }
+    },
+    "key_changes": { "type": "array", "items": { "type": "string" } },
+    "top_priorities": { "type": "array", "items": { "type": "string" } },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "recommendation": { "type": "string" },
+          "reason": { "type": "string" },
+          "linked_goal_or_principle": { "type": "string" },
+          "priority": { "type": "string", "enum": ["high", "medium", "low"] }
+        },
+        "required": ["recommendation", "reason", "linked_goal_or_principle", "priority"]
+      }
+    },
+    "risks": { "type": "array", "items": { "type": "string" } },
+    "followups": { "type": "array", "items": { "type": "string" } },
+    "caveats": { "type": "array", "items": { "type": "string" } },
+    "overall_confidence": { "type": "string", "enum": ["high", "medium", "low"] }
+  },
+  "required": [
+    "lens",
+    "review_period",
+    "review_window",
+    "comparison_window",
+    "source_notes",
+    "totals",
+    "buckets",
+    "key_metrics",
+    "cross_cutting_findings",
+    "alignment",
+    "key_changes",
+    "top_priorities",
+    "recommendations",
+    "risks",
+    "caveats",
+    "overall_confidence"
+  ]
+}

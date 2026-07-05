@@ -1,0 +1,127 @@
+{
+  "keep_patterns": [
+    {
+      "regex": "(?i)invoice|factura|payment|receipt|billing",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "financial document shared via messenger"
+    },
+    {
+      "regex": "(?i)meeting|call|schedule|calendar|let'?s (meet|talk|chat|connect|hop on|catch up)",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "meeting/call request"
+    },
+    {
+      "regex": "(?i)(давай|deal|confirmed|i'?m in|sounds good|let'?s do it|works for me|see you (then|there|thursday|friday|saturday|sunday|monday|tuesday|wednesday))[!.🔥✅]*$",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "meetup-confirmation — short agreement reply that likely confirms a proposed time/place; read full thread to extract date/time/location and create Google Calendar event"
+    },
+    {
+      "regex": "(?i)urgent|asap|emergency|critical|time.?sensitive|deadline",
+      "action": "ACTIONABLE_URGENT",
+      "reason": "urgency keyword"
+    },
+    {
+      "regex": "(?i)neurons? lab|NL (project|contract|proposal|deal|partnership|client)",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "Neurons Lab business mention"
+    },
+    {
+      "regex": "(?i)contract|proposal|SOW|statement of work|NDA|agreement|term sheet",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "legal/business document"
+    },
+    {
+      "regex": "(?i)can you|could you|would you|please (help|review|check|confirm|approve|respond|look at)",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "direct request pattern"
+    },
+    {
+      "regex": "(?i)invest(ment|or|ing)?|funding|fundrais|series [A-D]|seed round|venture|\\bVC\\b",
+      "action": "ACTIONABLE_DEFERRED",
+      "reason": "investment/funding discussion"
+    },
+    {
+      "regex": "(?i)speaking|keynote|panel|conference invitation|event invitation|talk at",
+      "action": "DISCOVERY",
+      "reason": "speaking/event opportunity"
+    },
+    {
+      "regex": "(?i)collaboration|partnership|joint venture|co-found|work together",
+      "action": "DISCOVERY",
+      "reason": "collaboration opportunity"
+    },
+    {
+      "regex": "(?i)security (breach|leak|incident|alert)|credential|password (reset|change|compromis)",
+      "action": "ACTIONABLE_URGENT",
+      "reason": "security incident via messenger"
+    }
+  ],
+  "skip_patterns": [
+    {
+      "regex": "(?i)^(sent|shared) (a |you a )?(photo|video|reel|story|voice message|sticker|GIF)$",
+      "action": "SPAM",
+      "reason": "media-only share notification with no text context"
+    },
+    {
+      "regex": "(?i)reacted to your (story|message|post)|liked your (story|message|photo|reel)",
+      "action": "SPAM",
+      "reason": "reaction notification — not a conversation"
+    },
+    {
+      "regex": "(?i)added you to .* group|invited you to join|created group",
+      "action": "SPAM",
+      "reason": "automated group invitation"
+    },
+    {
+      "regex": "(?i)is now on (WhatsApp|Telegram|Instagram|Facebook|Signal)",
+      "action": "SPAM",
+      "reason": "platform join notification"
+    },
+    {
+      "regex": "(?i)changed (their|the) (phone number|profile|name)|updated (their|the) profile",
+      "action": "SPAM",
+      "reason": "platform system notification"
+    },
+    {
+      "regex": "(?i)^Hi!? I('?m| am) .* (recruiter|recruiting|talent|sourcer)",
+      "action": "SPAM",
+      "reason": "recruiter cold outreach opener"
+    },
+    {
+      "regex": "(?i)I('?d| would) like to add you to my professional network",
+      "action": "SPAM",
+      "reason": "generic LinkedIn connection message",
+      "platform": "linkedin"
+    },
+    {
+      "regex": "(?i)(crypto|bitcoin|ethereum|NFT|airdrop|token|web3).*(profit|earn|guaranteed|opportunity|invest|trading)",
+      "action": "SPAM",
+      "reason": "crypto spam"
+    },
+    {
+      "regex": "(?i)congratulations!? (you('?ve| have)|your).*(won|selected|chosen|eligible|prize)",
+      "action": "SPAM",
+      "reason": "prize/lottery scam"
+    },
+    {
+      "regex": "(?i)(click (here|this link)|visit (this|my) (link|site|website)|(check|see) (this|my) (bio|profile|link in bio))",
+      "action": "SPAM",
+      "reason": "link spam / phishing pattern"
+    },
+    {
+      "regex": "(?i)missed.?call|voice(mail)? from|you have \\d+ new (message|notification)",
+      "action": "SPAM",
+      "reason": "missed call / voicemail notification"
+    },
+    {
+      "regex": "(?i)end-to-end encrypted|messages.*are.*encrypted|encryption.*enabled",
+      "action": "SPAM",
+      "reason": "platform encryption notice — not a message"
+    },
+    {
+      "regex": "(?i)(follow|subscribe|like).*(page|channel|account).*(grow|boost|increase|followers|engagement)",
+      "action": "SPAM",
+      "reason": "follow-for-follow / growth spam"
+    }
+  ]
+}

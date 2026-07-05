@@ -1,0 +1,17 @@
+{
+  "keep_patterns": [
+    { "regex": "(?i)invoice|factura|rechnung|receipt", "action": "ACTIONABLE_DEFERRED", "reason": "invoice — always keep" },
+    { "regex": "(?i)booking confirmation|reservation confirm|reserva confirm", "action": "RELEVANT", "reason": "booking confirmation" },
+    { "regex": "(?i)Submit Your Feedback|feedback request|Please Submit Your Feedback", "sender_contains": "Ashby", "action": "ACTIONABLE_URGENT", "reason": "Ashby feedback request" },
+    { "regex": "(?i)awaiting your approval", "sender_contains": "Productive", "action": "ACTIONABLE_DEFERRED", "reason": "Productive approval needed" },
+    { "regex": "NL Weekly Summary", "sender_contains": "Productive", "action": "ARCHIVE", "reason": "Productive weekly recap — not actionable" }
+  ],
+  "skip_patterns": [
+    { "regex": "iOJDH1", "action": "SKIP", "reason": "spam tracking code" },
+    { "regex": "\\[Ashby\\].*applied to", "action": "ARCHIVE", "reason": "job application notification" },
+    { "regex": "(?i)Time reminder|Timesheet submission|time review", "sender_contains": "Productive", "action": "ARCHIVE", "reason": "Productive time noise" },
+    { "regex": "Your Daily Interview Briefing", "action": "ARCHIVE", "reason": "Ashby daily digest" },
+    { "regex": "You have \\d+ Overdue Tasks", "sender_contains": "Ashby", "action": "ARCHIVE", "reason": "Ashby system alert" },
+    { "regex": "(?i)learning path|survey reminder|goal digest|weekly goal digest|pending approvals", "sender_contains": "Leapsome", "action": "ARCHIVE", "reason": "Leapsome noise" }
+  ]
+}
